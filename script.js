@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.image-section');
     let currentSectionIndex = 0;
     const allImages = document.querySelectorAll('.image-wrapper img'); // Select all images
+    const navbarItems = document.querySelectorAll('.navbar li a'); // Select navbar items
 
     function activateSection(index) {
         // Deactivate all images first
@@ -11,10 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const targetSection = sections[index];
         const images = targetSection.querySelectorAll('.image-wrapper img');
-        if (images.length > 0) {
-            // If there are images in the section, make the first one active
-            images[0].parentElement.classList.add('active');
-        }
+        const activeImage = images[0]; // Display the first image by default
+        activeImage.parentElement.classList.add('active');
 
         currentSectionIndex = index; // Update the current section index
         // Scroll the active image or section into view
@@ -24,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             targetSection.scrollIntoView({ behavior: 'smooth' });
         }
+        // Highlight the corresponding navbar item
+        navbarItems.forEach(item => item.classList.remove('active'));
+        navbarItems[index].classList.add('active');
     }
 
     // Navigate to the next or previous image within the current section
@@ -34,8 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let newIndex = currentIndex + direction;
 
         if (newIndex >= 0 && newIndex < images.length) {
-            images[currentIndex].parentElement.classList.remove('active');
             images[newIndex].parentElement.classList.add('active');
+            images[currentIndex].parentElement.classList.remove('active');
+            images[newIndex].scrollIntoView({ behavior: 'smooth', inline: 'center' });
         }
     }
 
@@ -46,14 +49,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showImage(offset) {
         const currentSection = sections[currentSectionIndex];
+        const wrappers = currentSection.querySelectorAll('.image-wrapper');
         const activeWrapper = currentSection.querySelector('.image-wrapper.active');
-        if (activeWrapper) {
-            navigateImage(offset);
+        let newActiveIndex = Array.from(wrappers).indexOf(activeWrapper) + offset;
+
+        if (newActiveIndex >= 0 && newActiveIndex < wrappers.length) {
+            wrappers.forEach(wrapper => wrapper.classList.remove('active'));
+            wrappers[newActiveIndex].classList.add('active');
+        } else if (newActiveIndex < 0 && currentSectionIndex > 0) {
+            activateSection(currentSectionIndex - 1);
+        } else if (newActiveIndex >= wrappers.length && currentSectionIndex < sections.length - 1) {
+            activateSection(currentSectionIndex + 1);
         }
     }
 
-    const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
+    const nextButton = document.querySelector('.next-section');
 
     nextButton.addEventListener('click', () => showImage(1));
     backButton.addEventListener('click', () => showImage(-1));
@@ -75,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const navbarItems = document.querySelectorAll('.navbar li');
     navbarItems.forEach((item, index) => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
