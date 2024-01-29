@@ -6,12 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSectionIndex = 0;
     let lastScrollX = window.scrollX; // Use scrollX for horizontal scrolling
 
-    // Initialize the active image in each section
-    sections.forEach((section, index) => {
-        const images = section.querySelectorAll('.image-wrapper');
-        images.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
-    });
-
     // Function to update the active image in the current section
     function updateActiveImage(direction) {
         const images = sections[currentSectionIndex].querySelectorAll('.image-wrapper');
@@ -35,8 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function changeSection(newIndex) {
         currentSectionIndex = newIndex;
         navbarItems.forEach((item, idx) => item.classList.toggle('active', idx === newIndex));
-        const newSectionImages = sections[newIndex].querySelectorAll('.image-wrapper');
-        newSectionImages.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
+
+        // Scroll to the corresponding section when a new section is activated
+        sections[newIndex].scrollIntoView({ behavior: 'smooth' });
 
         // Update the active image in the current section
         updateActiveImage(0);
