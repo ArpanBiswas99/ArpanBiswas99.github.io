@@ -13,6 +13,7 @@ body, html {
     color: #fff;
     font-family: Arial, sans-serif;
     overflow: hidden; /* Disable vertical and horizontal scrolling */
+    max-width: 100%; /* Ensure content does not exceed viewport width */
 }
 
 /* Navigation bar styles */
@@ -99,6 +100,11 @@ main {
     margin: 0 auto; /* Center the image horizontally */
     opacity: 1; /* Active image is fully opaque */
     transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
+}
+
+.image-wrapper img {
+    max-width: 100%; /* Ensure images do not exceed viewport width */
+    height: auto; /* Maintain aspect ratio */
 }
 
 /* Next and Back buttons */
