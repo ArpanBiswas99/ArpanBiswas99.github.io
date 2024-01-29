@@ -47,12 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const images = sections[currentSectionIndex].querySelectorAll('img');
         if (currentImageIndex < images.length - 1) {
             showImage(++currentImageIndex);
+        } else {
+            // Move to the next section when there are no more images in the current section
+            nextSection();
         }
     }
 
     function previousImage() {
         if (currentImageIndex > 0) {
             showImage(--currentImageIndex);
+        } else {
+            // Move to the previous section when there are no more images in the current section
+            previousSection();
         }
     }
 
@@ -68,22 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function updateNavbarOnScroll() {
-        const scrollY = window.scrollY;
-        let sectionTop = 0;
-        for (let i = 0; i < sections.length; i++) {
-            const section = sections[i];
-            const sectionHeight = section.clientHeight;
-            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-                changeSection(i);
-                break;
-            }
-            sectionTop += sectionHeight;
-        }
-    }
-
-    nextButton.addEventListener('click', nextSection);
-    backButton.addEventListener('click', previousSection);
+    nextButton.addEventListener('click', nextImage);
+    backButton.addEventListener('click', previousImage);
 
     navbarItems.forEach((item, index) => {
         const link = item.querySelector('a');
@@ -93,24 +85,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    changeSection(0); // Initialize the first section as active
-
-    window.addEventListener('scroll', updateNavbarOnScroll);
+    changeSection(0); // Initialize the first section and image as active
 
     // Optional: If you want to navigate images within a section using keyboard arrows
     document.addEventListener('keydown', (e) => {
         switch (e.key) {
             case 'ArrowLeft':
-                previousSection();
-                break;
-            case 'ArrowRight':
-                nextSection();
-                break;
-            case 'ArrowUp':
                 previousImage();
                 break;
-            case 'ArrowDown':
+            case 'ArrowRight':
                 nextImage();
+                break;
+            case 'ArrowUp':
+                previousSection();
+                break;
+            case 'ArrowDown':
+                nextSection();
                 break;
         }
     });
