@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSectionIndex = 0;
     let isScrolling = false;
 
-    // Function to update the active image or change section
+    // Function to update the active image within a section or change the section
     function updateActiveImage(direction) {
         if (isScrolling) return;
 
@@ -28,37 +28,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             isScrolling = false;
-        }, 800);
-    }
-
-    function changeSection(newIndex) {
-        if (newIndex === currentSectionIndex) return;
-
-        currentSectionIndex = newIndex;
-        sections.forEach((section, idx) => {
-            section.scrollIntoView({ behavior: 'smooth' });
-        });
-
-        navbarItems.forEach((item, idx) => {
-            if (idx === newIndex) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
-        });
-
-        const newSectionImages = sections[newIndex].querySelectorAll('.image-wrapper');
-        newSectionImages.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
+        }, 800); // Delay to prevent rapid scrolling
     }
 
     // Function to change the current section and update navbar highlighting
     function changeSection(newIndex) {
-        currentSectionIndex = newIndex; // Update the current section index
-        sections[newIndex].scrollIntoView({ behavior: 'smooth' }); // Scroll to the new section
+        if (newIndex === currentSectionIndex) return;
 
-        // Update navbar highlighting
+        currentSectionIndex = newIndex;
+        sections[newIndex].scrollIntoView({ behavior: 'smooth' });
+
         navbarItems.forEach((item, idx) => {
             item.classList.toggle('active', idx === newIndex);
+        });
+
+        const newSectionImages = sections[newIndex].querySelectorAll('.image-wrapper');
+        newSectionImages.forEach((img, imgIndex) => {
+            img.classList.toggle('active', imgIndex === 0); // Activate the first image in the new section
         });
     }
 
@@ -91,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const scrollLeft = section.scrollLeft;
             const sectionWidth = section.offsetWidth;
 
-            if (scrollLeft === scrollWidth - sectionWidth) {
+            if (scrollLeft + sectionWidth >= scrollWidth) {
                 // Scrolled to the end of the section
                 if (currentSectionIndex < sections.length - 1) {
                     changeSection(currentSectionIndex + 1);
