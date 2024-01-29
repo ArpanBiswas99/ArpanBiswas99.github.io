@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
           "event_category": "navigation",
           "event_label": "Who Am I Link"
         });
+    });
 
     // Initialize the first section as active
     changeSection(0);
