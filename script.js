@@ -4,74 +4,66 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
     let currentSectionIndex = 0;
-    let lastScrollTop = 0; // Track the last scroll position to determine scroll direction
+    let lastScrollY = window.scrollY;
 
-    // Initialize first image in each section as active
-    sections.forEach(section => {
+    // Initialize the active image in each section
+    sections.forEach((section, index) => {
         const images = section.querySelectorAll('.image-wrapper');
-        images.forEach((img, index) => img.classList.toggle('active', index === 0));
+        images.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
     });
 
-    const setActiveImage = (sectionIndex, imageIndex) => {
-        const images = sections[sectionIndex].querySelectorAll('.image-wrapper');
-        images.forEach((img, idx) => {
-            img.classList.remove('active');
-            if (idx === imageIndex) {
-                img.classList.add('active');
-            }
-        });
-    };
+    // Function to update the active image in the current section
+    function updateActiveImage(direction) {
+        const images = sections[currentSectionIndex].querySelectorAll('.image-wrapper');
+        const activeIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
+        let newIndex = activeIndex + direction;
 
-    const navigateSection = (direction) => {
-        const currentImages = sections[currentSectionIndex].querySelectorAll('.image-wrapper');
-        const activeImageIndex = Array.from(currentImages).findIndex(img => img.classList.contains('active'));
-        let newImageIndex = activeImageIndex + direction;
-
-        if (newImageIndex >= 0 && newImageIndex < currentImages.length) {
-            // Move within the same section
-            setActiveImage(currentSectionIndex, newImageIndex);
-        } else if (newImageIndex < 0 && currentSectionIndex > 0) {
-            // Move to the last image of the previous section
-            currentSectionIndex--;
-            const prevImages = sections[currentSectionIndex].querySelectorAll('.image-wrapper');
-            setActiveImage(currentSectionIndex, prevImages.length - 1);
-        } else if (newImageIndex >= currentImages.length && currentSectionIndex < sections.length - 1) {
-            // Move to the first image of the next section
-            currentSectionIndex++;
-            setActiveImage(currentSectionIndex, 0);
-        }
-
-        // Update navbar highlighting
-        navbarItems.forEach((item, index) => item.classList.toggle('active', index === currentSectionIndex));
-    };
-
-    // Scroll event to handle image navigation within sections
-    window.addEventListener('scroll', () => {
-        const st = window.pageYOffset || document.documentElement.scrollTop;
-        if (st > lastScrollTop) {
-            // Downscroll
-            navigateSection(1);
+        if (newIndex >= 0 && newIndex < images.length) {
+            images[activeIndex].classList.remove('active');
+            images[newIndex].classList.add('active');
         } else {
-            // Upscroll
-            navigateSection(-1);
+            // Move to next/previous section if at the end/start of the current section
+            if (newIndex >= images.length && currentSectionIndex < sections.length - 1) {
+                changeSection(currentSectionIndex + 1);
+            } else if (newIndex < 0 && currentSectionIndex > 0) {
+                changeSection(currentSectionIndex - 1);
+            }
         }
-        lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
-    }, false);
+    }
 
-    // Event listeners for Next and Back buttons
-    nextButton.addEventListener('click', () => navigateSection(1));
-    backButton.addEventListener('click', () => navigateSection(-1));
+    // Function to change the current section and highlight the navbar
+    function changeSection(newIndex) {
+        currentSectionIndex = newIndex;
+        navbarItems.forEach((item, idx) => item.classList.toggle('active', idx === newIndex));
+        const newSectionImages = sections[newIndex].querySelectorAll('.image-wrapper');
+        newSectionImages.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
+    }
 
-    // Navbar click event for direct navigation
-    navbarItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            currentSectionIndex = index;
-            setActiveImage(index, 0); // Activate the first image in the clicked section
-            navbarItems.forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
-        });
+    // Scroll event to handle navigation between images and sections
+    window.addEventListener('scroll', () => {
+        const direction = window.scrollY > lastScrollY ? 1 : -1;
+        updateActiveImage(direction);
+        lastScrollY = window.scrollY;
     });
 
-    // Initial setup
-    navbarItems[currentSectionIndex].classList.add('active');
+    // Keyboard navigation with arrow keys
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+            updateActiveImage(1);
+        } else if (e.key === 'ArrowLeft') {
+            updateActiveImage(-1);
+        }
+    });
+
+    // Button navigation
+    nextButton.addEventListener('click', () => updateActiveImage(1));
+    backButton.addEventListener('click', () => updateActiveImage(-1));
+
+    // Navigation bar clicks
+    navbarItems.forEach((item, index) => {
+        item.addEventListener('click', () => changeSection(index));
+    });
+
+    // Initialize the first section as active
+    changeSection(0);
 });
