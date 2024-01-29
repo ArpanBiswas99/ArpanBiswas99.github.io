@@ -4,77 +4,74 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
     let currentSectionIndex = 0;
+    let lastScrollTop = 0; // Track the last scroll position to determine scroll direction
 
-    // Initialize each section with the first image active
+    // Initialize first image in each section as active
     sections.forEach(section => {
         const images = section.querySelectorAll('.image-wrapper');
         images.forEach((img, index) => img.classList.toggle('active', index === 0));
     });
 
-    const updateActiveImage = (section, direction) => {
-        const images = section.querySelectorAll('.image-wrapper');
-        const activeIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
-        const newIndex = activeIndex + direction;
-
-        if (newIndex >= 0 && newIndex < images.length) {
-            images[activeIndex].classList.remove('active', 'fade-in');
-            images[activeIndex].classList.add('fade-out');
-            images[newIndex].classList.add('active', 'fade-in');
-            images[newIndex].classList.remove('fade-out');
-        }
-
-        return newIndex;
+    const setActiveImage = (sectionIndex, imageIndex) => {
+        const images = sections[sectionIndex].querySelectorAll('.image-wrapper');
+        images.forEach((img, idx) => {
+            img.classList.remove('active');
+            if (idx === imageIndex) {
+                img.classList.add('active');
+            }
+        });
     };
 
-    const navigate = (direction) => {
-        const currentSection = sections[currentSectionIndex];
-        const newIndex = updateActiveImage(currentSection, direction);
+    const navigateSection = (direction) => {
+        const currentImages = sections[currentSectionIndex].querySelectorAll('.image-wrapper');
+        const activeImageIndex = Array.from(currentImages).findIndex(img => img.classList.contains('active'));
+        let newImageIndex = activeImageIndex + direction;
 
-        // Check boundaries and move to next/previous section if needed
-        if (newIndex < 0 && currentSectionIndex > 0) {
+        if (newImageIndex >= 0 && newImageIndex < currentImages.length) {
+            // Move within the same section
+            setActiveImage(currentSectionIndex, newImageIndex);
+        } else if (newImageIndex < 0 && currentSectionIndex > 0) {
+            // Move to the last image of the previous section
             currentSectionIndex--;
-            const prevSection = sections[currentSectionIndex];
-            const lastIndex = prevSection.querySelectorAll('.image-wrapper').length - 1;
-            updateActiveImage(prevSection, lastIndex);
-        } else if (newIndex >= currentSection.querySelectorAll('.image-wrapper').length && currentSectionIndex < sections.length - 1) {
+            const prevImages = sections[currentSectionIndex].querySelectorAll('.image-wrapper');
+            setActiveImage(currentSectionIndex, prevImages.length - 1);
+        } else if (newImageIndex >= currentImages.length && currentSectionIndex < sections.length - 1) {
+            // Move to the first image of the next section
             currentSectionIndex++;
-            updateActiveImage(sections[currentSectionIndex], 0);
+            setActiveImage(currentSectionIndex, 0);
         }
 
         // Update navbar highlighting
         navbarItems.forEach((item, index) => item.classList.toggle('active', index === currentSectionIndex));
     };
 
-    nextButton.addEventListener('click', () => navigate(1));
-    backButton.addEventListener('click', () => navigate(-1));
+    // Scroll event to handle image navigation within sections
+    window.addEventListener('scroll', () => {
+        const st = window.pageYOffset || document.documentElement.scrollTop;
+        if (st > lastScrollTop) {
+            // Downscroll
+            navigateSection(1);
+        } else {
+            // Upscroll
+            navigateSection(-1);
+        }
+        lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+    }, false);
 
-    // Navbar click event for direct section navigation
+    // Event listeners for Next and Back buttons
+    nextButton.addEventListener('click', () => navigateSection(1));
+    backButton.addEventListener('click', () => navigateSection(-1));
+
+    // Navbar click event for direct navigation
     navbarItems.forEach((item, index) => {
         item.addEventListener('click', () => {
             currentSectionIndex = index;
-            sections.forEach((section, idx) => {
-                const images = section.querySelectorAll('.image-wrapper');
-                images.forEach((img, imgIdx) => img.classList.toggle('active', idx === index && imgIdx === 0));
-            });
-            navbarItems.forEach(navItem => navItem.classList.remove('active'));
+            setActiveImage(index, 0); // Activate the first image in the clicked section
+            navbarItems.forEach(nav => nav.classList.remove('active'));
             item.classList.add('active');
         });
     });
 
-    // Update navbar highlight based on scroll position
-    window.addEventListener('scroll', () => {
-        const scrollPosition = window.scrollY;
-        sections.forEach((section, index) => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                navbarItems.forEach(navItem => navItem.classList.remove('active'));
-                navbarItems[index].classList.add('active');
-                currentSectionIndex = index;
-            }
-        });
-    });
-
-    // Initialize navbar with the first section active
-    navbarItems[0].classList.add('active');
+    // Initial setup
+    navbarItems[currentSectionIndex].classList.add('active');
 });
