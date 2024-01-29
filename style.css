@@ -80,7 +80,7 @@ main {
 }
 
 .image-wrapper {
-    opacity: 0.5; /* Non-active images are more translucent */
+    opacity: 0; /* Initially set opacity to 0 for fade-in effect */
     transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
     position: relative; /* To position the active image */
     text-align: center; /* Center the active image horizontally */
