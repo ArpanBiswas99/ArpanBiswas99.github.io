@@ -51,6 +51,22 @@ body, html {
     background-color: #555;
 }
 
+/* Scrollbar styling */
+body::-webkit-scrollbar {
+    width: 8px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+/* Highlight the active menu item */
+.navbar ul li.active a {
+    background-color: #555;
+    color: #fff;
+}
+
 /* Main content styles */
 main {
     padding-top: 50px;

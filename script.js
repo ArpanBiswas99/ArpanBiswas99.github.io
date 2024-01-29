@@ -3,18 +3,29 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSectionIndex = 0;
     let currentImageIndex = 0;
 
+    const navbarList = document.querySelector('.navbar ul');
+    const navbarItems = navbarList.querySelectorAll('li');
+
     function changeSection(newIndex) {
         sections[currentSectionIndex].classList.remove('active');
         currentImageIndex = 0;
         currentSectionIndex = newIndex;
         sections[currentSectionIndex].classList.add('active');
         showImage(currentImageIndex);
+
+        // Highlight the corresponding menu item
+        navbarItems.forEach((item, index) => {
+            item.classList.remove('active');
+            if (index === currentSectionIndex) {
+                item.classList.add('active');
+            }
+        });
     }
 
     function showImage(newIndex) {
         const images = Array.from(sections[currentSectionIndex].querySelectorAll('img'));
-        images.forEach(img => img.style.opacity = '0');
-        images[newIndex].style.opacity = '1';
+        images.forEach(img => img.style.display = 'none');
+        images[newIndex].style.display = 'block';
     }
 
     function nextImage() {
@@ -34,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Scroll event listener to handle scrolling within a section
     window.addEventListener('wheel', (e) => {
         if (e.deltaY > 0) {
             nextImage();
@@ -53,5 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('.next-section').addEventListener('click', nextImage);
 
+    // Initialize the first section and image
     changeSection(0);
 });
