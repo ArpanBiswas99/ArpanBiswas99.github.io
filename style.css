@@ -70,7 +70,7 @@ main {
     width: 100%; /* Make the content full-width */
 }
 
-/* Image section styles */
+/* Image section styles with padding at the top */
 .image-section {
     display: flex; /* Display images in a row */
     flex: 0 0 auto; /* Do not grow, do not shrink, basis is auto */
@@ -81,7 +81,9 @@ main {
     transition: transform 1s ease-in-out; /* Smooth transition for scaling */
     scroll-snap-align: center; /* Center image during scrolling */
     overflow: hidden; /* Hide overflowing images */
+    padding-top: 50px; /* Add padding at the top of each section */
 }
+
 
 /* Style for the active image */
 .image-wrapper.active {

@@ -1,69 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll('.image-section');
+    const sections = document.querySelectorAll('.pdf-section');
     const navbarItems = document.querySelectorAll('.navbar li a');
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
     let currentSectionIndex = 0;
-    let lastScrollY = window.scrollY;
+    let currentPDFIndex = 0;
 
-    // Initialize the active image in each section
-    sections.forEach((section, index) => {
-        const images = section.querySelectorAll('.image-wrapper');
-        images.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
-    });
+    function updateActiveSection(index) {
+        currentSectionIndex = index;
+        currentPDFIndex = 0; // Reset PDF index to show the first PDF in the new section
+        navbarItems.forEach((item, idx) => item.classList.toggle('active', idx === index));
+        scrollToCurrentPDF();
+    }
 
-    // Function to update the active image in the current section
-    function updateActiveImage(direction) {
-        const images = sections[currentSectionIndex].querySelectorAll('.image-wrapper');
-        const activeIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
-        let newIndex = activeIndex + direction;
+    function updateActivePDFIndex(direction) {
+        const currentSection = sections[currentSectionIndex];
+        const pdfs = currentSection.querySelectorAll('.pdf-iframe');
+        let newIndex = currentPDFIndex + direction;
 
-        if (newIndex >= 0 && newIndex < images.length) {
-            images[activeIndex].classList.remove('active');
-            images[newIndex].classList.add('active');
-        } else {
-            // Move to next/previous section if at the end/start of the current section
-            if (newIndex >= images.length && currentSectionIndex < sections.length - 1) {
-                changeSection(currentSectionIndex + 1);
-            } else if (newIndex < 0 && currentSectionIndex > 0) {
-                changeSection(currentSectionIndex - 1);
-            }
+        if (newIndex >= 0 && newIndex < pdfs.length) {
+            currentPDFIndex = newIndex;
+        } else if (newIndex < 0 && currentSectionIndex > 0) {
+            updateActiveSection(currentSectionIndex - 1);
+        } else if (newIndex >= pdfs.length && currentSectionIndex < sections.length - 1) {
+            updateActiveSection(currentSectionIndex + 1);
+        }
+
+        scrollToCurrentPDF();
+    }
+
+    function scrollToCurrentPDF() {
+        const currentSection = sections[currentSectionIndex];
+        const pdfs = currentSection.querySelectorAll('.pdf-wrapper');
+        if (pdfs[currentPDFIndex]) {
+            pdfs[currentPDFIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
-    // Function to change the current section and highlight the navbar
-    function changeSection(newIndex) {
-        currentSectionIndex = newIndex;
-        navbarItems.forEach((item, idx) => item.classList.toggle('active', idx === newIndex));
-        const newSectionImages = sections[newIndex].querySelectorAll('.image-wrapper');
-        newSectionImages.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
-    }
+    nextButton.addEventListener('click', () => updateActivePDFIndex(1));
+    backButton.addEventListener('click', () => updateActivePDFIndex(-1));
 
-    // Scroll event to handle navigation between images and sections
-    window.addEventListener('scroll', () => {
-        const direction = window.scrollY > lastScrollY ? 1 : -1;
-        updateActiveImage(direction);
-        lastScrollY = window.scrollY;
-    });
-
-    // Keyboard navigation with arrow keys
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') {
-            updateActiveImage(1);
-        } else if (e.key === 'ArrowLeft') {
-            updateActiveImage(-1);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            updateActivePDFIndex(1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            updateActivePDFIndex(-1);
         }
     });
 
-    // Button navigation
-    nextButton.addEventListener('click', () => updateActiveImage(1));
-    backButton.addEventListener('click', () => updateActiveImage(-1));
-
-    // Navigation bar clicks
     navbarItems.forEach((item, index) => {
-        item.addEventListener('click', () => changeSection(index));
+        item.addEventListener('click', () => updateActiveSection(index));
     });
 
-    // Initialize the first section as active
-    changeSection(0);
+    // Initialize the first section and the first PDF as active
+    updateActiveSection(0);
 });
