@@ -35,12 +35,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to change the current section and highlight the navbar
     function changeSection(newIndex) {
         currentSectionIndex = newIndex;
-        navbarItems.forEach((item, idx) => item.classList.toggle('active', idx === newIndex));
+        navbarItems.forEach((item, idx) => {
+            if (idx === newIndex) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        // Scroll to the corresponding section when a new section is activated
+        sections[newIndex].scrollIntoView({ behavior: 'smooth' });
         const newSectionImages = sections[newIndex].querySelectorAll('.image-wrapper');
         newSectionImages.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
     }
 
-    // Mousewheel event to handle navigation between sections
+    // Mousewheel event to handle navigation between sections and section snapping
     document.addEventListener('wheel', (e) => {
         if (e.deltaY > 0) {
             updateActiveImage(1);
