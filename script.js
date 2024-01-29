@@ -6,6 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSectionIndex = 0;
     let isScrolling = false;
 
+    // Ensure the first image in the first section is visible
+    function initializeFirstImage() {
+        const firstSectionImages = sections[0].querySelectorAll('.image-wrapper');
+        if (firstSectionImages.length > 0) {
+            firstSectionImages[0].classList.add('active');
+        }
+    }
+
     // Function to update the active image within a section or change the section
     function updateActiveImage(direction) {
         if (isScrolling) return;
@@ -73,5 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
     backButton.addEventListener('click', () => updateActiveImage(-1));
 
     // Initialize the first section and the first image within it as active
+    initializeFirstImage();
     changeSection(0);
 });
