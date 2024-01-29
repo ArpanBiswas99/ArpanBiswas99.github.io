@@ -9,11 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const backButton = document.querySelector('.back-section');
 
     function changeSection(newIndex) {
-        sections[currentSectionIndex].classList.remove('active');
+        sections[currentSectionIndex].querySelectorAll('img').forEach(img => img.classList.remove('visible'));
         currentImageIndex = 0;
         currentSectionIndex = newIndex;
-        sections[currentSectionIndex].classList.add('active');
-        showImage(currentImageIndex);
+        sections[currentSectionIndex].querySelectorAll('img')[currentImageIndex].classList.add('visible');
 
         navbarItems.forEach((item, index) => {
             item.classList.remove('active');
@@ -37,8 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showImage(newIndex) {
         const images = Array.from(sections[currentSectionIndex].querySelectorAll('img'));
-        images.forEach(img => img.style.display = 'none');
-        images[newIndex].style.display = 'block';
+        images.forEach(img => img.classList.remove('visible'));
+        images[newIndex].classList.add('visible');
     }
 
     function nextImage() {
@@ -69,17 +68,17 @@ document.addEventListener('DOMContentLoaded', () => {
     nextButton.addEventListener('click', nextSection);
     backButton.addEventListener('click', previousSection);
 
-    changeSection(0);
-
-    sections.forEach((section) => {
-        section.addEventListener('scroll', () => {
-            const scrollProgress = (section.scrollTop / (section.scrollHeight - section.clientHeight)) * 100;
-            if (scrollProgress >= 95) {
-                nextImage();
-            }
+    navbarItems.forEach((item, index) => {
+        const link = item.querySelector('a');
+        link.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent the default anchor link behavior
+            changeSection(index); // Change to the section that corresponds to the clicked navbar item
         });
     });
 
+    changeSection(0); // Initialize the first section as active
+
+    // Optional: If you want to navigate images within a section using keyboard arrows
     document.addEventListener('keydown', (e) => {
         switch (e.key) {
             case 'ArrowLeft':
