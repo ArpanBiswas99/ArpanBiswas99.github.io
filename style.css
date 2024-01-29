@@ -55,49 +55,50 @@ body, html {
     background-color: #555;
 }
 
-//* Main content styles */
+/* Main content styles */
 main {
     display: flex;
-    flex-direction: row; /* Line up sections in a row */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    scroll-snap-type: x mandatory; /* Ensure snapping behavior */
-    scroll-behavior: smooth; /* Smooth scrolling for a better experience */
+    flex-wrap: nowrap; /* Prevent wrapping of sections */
+    overflow-x: scroll; /* Enable horizontal scrolling */
+    scroll-snap-type: x proximity; /* Snapping effect */
+    scroll-behavior: smooth; /* Smooth scrolling */
 }
 
 /* Image section styles */
 .image-section {
-    display: flex; /* Use flexbox for aligning images */
-    flex: 0 0 100%; /* Do not grow or shrink, and set the basis to 100% of the viewport width */
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    position: relative; /* Establish a positioning context for absolute children */
-    height: 100vh; /* Set section height to full viewport height */
+    display: flex; /* Display images in a row */
+    flex: 0 0 auto; /* Do not grow, do not shrink, basis is auto */
+    width: 100vw; /* Section width is full viewport width */
+    align-items: center; /* Align images vertically in the center */
+    justify-content: center; /* Center images horizontally */
+    position: relative; /* To position buttons and images */
+    transition: transform 1s ease-in-out; /* Smooth transition for scaling */
 }
 
-/* Style for all image wrappers */
 .image-wrapper {
-    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Smooth transition for scaling and opacity */
-    position: relative; /* Positioned relative to its normal position */
-    width: 80%; /* Set a default width */
-    margin: 0 auto; /* Center within the section */
+    margin: 0 5vw; /* Space between images for multi-image sections */
+    opacity: 0.5; /* Non-active images are more translucent */
+    transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
 }
 
 /* Style for all images */
 .image-wrapper img {
-    width: 100%; /* Image width is full container width */
-    height: auto; /* Height is auto to maintain aspect ratio */
-    object-fit: contain; /* Ensure the image fits within the container */
+    width: auto; /* Maintain aspect ratio */
+    height: 70vh; /* Adjust height to fit within the viewport */
+    object-fit: contain; /* Ensure the image fits within the container without being cropped */
 }
 
-/* Styles for the active image wrapper and image */
-.image-wrapper.active {
-    transform: scale(1.1); /* Slightly scale up the active image wrapper */
-    z-index: 10; /* Ensure active image is above others */
+/* Styles for the active image */
+.image-wrapper.active img {
+    height: 80vh; /* Make the active image larger, consistent in all sections */
     opacity: 1; /* Active image is fully opaque */
 }
 
-.image-wrapper.active img {
-    height: 70vh; /* Make the active image larger and consistent in all sections */
+/* Style for images */
+img {
+    width: 100%; /* Image width is full container width */
+    height: auto; /* Height is auto to maintain aspect ratio */
+    object-fit: contain; /* Ensure the image fits within the container */
 }
 
 /* Next and Back buttons */
