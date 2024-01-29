@@ -65,6 +65,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateNavbarOnScroll() {
+        const viewportHeight = window.innerHeight;
+        const scrollY = window.scrollY;
+
+        for (let i = 0; i < sections.length; i++) {
+            const section = sections[i];
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.clientHeight;
+
+            if (scrollY >= sectionTop && scrollY <= sectionBottom) {
+                changeSection(i);
+                break;
+            }
+        }
+    }
+
     nextButton.addEventListener('click', nextSection);
     backButton.addEventListener('click', previousSection);
 
@@ -77,6 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     changeSection(0); // Initialize the first section as active
+
+    window.addEventListener('scroll', updateNavbarOnScroll);
 
     // Optional: If you want to navigate images within a section using keyboard arrows
     document.addEventListener('keydown', (e) => {
