@@ -5,12 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
 
-    // Function to activate a section and its first image
     function activateSection(index) {
         sections.forEach(section => {
-            section.querySelectorAll('.image-wrapper').forEach(wrapper => {
-                wrapper.classList.remove('active');
-            });
+            section.querySelectorAll('.image-wrapper').forEach(wrapper => wrapper.classList.remove('active'));
         });
 
         const targetSection = sections[index];
@@ -29,13 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateButtonVisibility();
     }
 
-    // Function to update the visibility of next and back buttons
     function updateButtonVisibility() {
         backButton.style.display = currentSectionIndex === 0 ? 'none' : 'block';
         nextButton.style.display = currentSectionIndex === sections.length - 1 ? 'none' : 'block';
     }
 
-    // Function to show the next or previous image within the current section
     function showImage(offset) {
         const currentSection = sections[currentSectionIndex];
         const wrappers = currentSection.querySelectorAll('.image-wrapper');
@@ -52,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event listeners for navigation
     nextButton.addEventListener('click', () => showImage(1));
     backButton.addEventListener('click', () => showImage(-1));
 
@@ -80,6 +74,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Initialize the first section and image
     activateSection(0);
 });

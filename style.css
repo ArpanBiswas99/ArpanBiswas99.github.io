@@ -94,8 +94,8 @@ main {
 /* Style for images */
 img {
     max-width: 100%;
-    max-height: 100%;
-    object-fit: cover; /* Make the image cover the entire container */
+    max-height: 100vh; /* Limit image height to viewport height */
+    object-fit: contain; /* Ensure the image is scaled to fit while maintaining aspect ratio */
 }
 
 /* Next and Back buttons */
