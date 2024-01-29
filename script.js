@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
         navbarItems.forEach((item, idx) => item.classList.toggle('active', idx === newIndex));
         const newSectionImages = sections[newIndex].querySelectorAll('.image-wrapper');
         newSectionImages.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
+
+        // Update the active image in the current section
+        updateActiveImage(0);
     }
 
     // Scroll event to handle navigation between images and sections
