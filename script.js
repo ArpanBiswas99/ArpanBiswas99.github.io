@@ -8,14 +8,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
 
+    function showImage(newIndex) {
+        const images = Array.from(sections[currentSectionIndex].querySelectorAll('img'));
+        images.forEach((img, index) => {
+            if (index === newIndex) {
+                img.classList.add('focus');
+            } else {
+                img.classList.remove('focus');
+            }
+        });
+    }
+
     function changeSection(newIndex) {
-        sections[currentSectionIndex].querySelectorAll('img').forEach(img => img.classList.remove('visible'));
+        sections[currentSectionIndex].querySelectorAll('img').forEach(img => img.classList.remove('visible', 'focus'));
         currentImageIndex = 0;
         currentSectionIndex = newIndex;
-        const images = sections[currentSectionIndex].querySelectorAll('img');
-        if (images.length > 0) {
-            images[currentImageIndex].classList.add('visible');
-        }
+        sections[currentSectionIndex].querySelectorAll('img')[currentImageIndex].classList.add('visible');
+        showImage(currentImageIndex);
 
         navbarItems.forEach((item, index) => {
             item.classList.remove('active');
@@ -37,28 +46,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function showImage(newIndex) {
-        const images = Array.from(sections[currentSectionIndex].querySelectorAll('img'));
-        images.forEach(img => img.classList.remove('visible'));
-        images[newIndex].classList.add('visible');
+    function updateNavbarOnScroll() {
+        const viewportWidth = window.innerWidth;
+        const scrollX = window.scrollX;
+
+        for (let i = 0; i < sections.length; i++) {
+            const section = sections[i];
+            const sectionLeft = section.offsetLeft;
+            const sectionRight = sectionLeft + section.clientWidth;
+
+            if (scrollX >= sectionLeft && scrollX <= sectionRight) {
+                changeSection(i);
+                break;
+            }
+        }
     }
 
     function nextImage() {
         const images = sections[currentSectionIndex].querySelectorAll('img');
         if (currentImageIndex < images.length - 1) {
             showImage(++currentImageIndex);
-        } else {
-            // Move to the next section when there are no more images in the current section
-            nextSection();
         }
     }
 
     function previousImage() {
         if (currentImageIndex > 0) {
             showImage(--currentImageIndex);
-        } else {
-            // Move to the previous section when there are no more images in the current section
-            previousSection();
         }
     }
 
@@ -74,33 +87,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    nextButton.addEventListener('click', nextImage);
-    backButton.addEventListener('click', previousImage);
+    nextButton.addEventListener('click', nextSection);
+    backButton.addEventListener('click', previousSection);
 
     navbarItems.forEach((item, index) => {
         const link = item.querySelector('a');
         link.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent the default anchor link behavior
-            changeSection(index); // Change to the section that corresponds to the clicked navbar item
+            e.preventDefault();
+            changeSection(index);
         });
     });
 
-    changeSection(0); // Initialize the first section and image as active
+    changeSection(0);
 
-    // Optional: If you want to navigate images within a section using keyboard arrows
+    window.addEventListener('scroll', updateNavbarOnScroll);
+
     document.addEventListener('keydown', (e) => {
         switch (e.key) {
             case 'ArrowLeft':
-                previousImage();
-                break;
-            case 'ArrowRight':
-                nextImage();
-                break;
-            case 'ArrowUp':
                 previousSection();
                 break;
-            case 'ArrowDown':
+            case 'ArrowRight':
                 nextSection();
+                break;
+            case 'ArrowUp':
+                previousImage();
+                break;
+            case 'ArrowDown':
+                nextImage();
                 break;
         }
     });
