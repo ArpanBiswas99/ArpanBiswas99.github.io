@@ -4,93 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arpan Biswas | Digital Resume</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            width: 100%;
-            height: 100%;
-            background-color: #121212;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
-        }
-
-        .navbar {
-            background-color: #333;
-            color: #fff;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 2000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-        }
-
-        .navbar ul {
-            list-style-type: none;
-            display: flex;
-            justify-content: center;
-        }
-
-        .navbar li a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .navbar li a:hover, .navbar ul li.active a {
-            background-color: #555;
-        }
-
-        main {
-            display: flex;
-            flex-direction: row;
-            width: calc(100vw * number_of_sections); /* Replace with the actual number of sections */
-            height: calc(100vh - 50px); /* Assuming 50px navbar height */
-            overflow-x: scroll;
-            scroll-snap-type: x mandatory; /* Ensures that the scrolling snaps to the sections */
-        }
-
-        .pdf-section {
-            width: 100vw;
-            height: calc(100vh - 50px); /* Assuming 50px navbar height */
-            flex-shrink: 0;
-            scroll-snap-align: start; /* Aligns the snap point */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 1s ease-in-out; /* Fade transition */
-        }
-
-        .pdf-section.active {
-            opacity: 1; /* Only active section is fully visible */
-        }
-
-
-        .pdf-wrapper {
-            height: calc(100vh - 50px); /* Adjust based on the navbar's height */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .pdf-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav class="navbar">
@@ -105,74 +19,41 @@
         </ul>
     </nav>
     <main>
-        <section id="who-am-i" class="pdf-section">
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide1.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide2.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide4.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide18.pdf" type="application/pdf"></iframe>
-            </div>
-        <section id="education" class="pdf-section">
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide3.pdf" type="application/pdf"></iframe>
-            </div>
+        <section id="who-am-i" class="image-section">
+            <div class="image-wrapper fade-in"><img src="Slide1.JPG" alt="Digital Resume"></div>
+            <div class="image-wrapper fade-in"><img src="Slide2.JPG" alt="About me"></div>
+            <div class="image-wrapper fade-in"><img src="Slide4.JPG" alt="Milestones"></div>
+            <div class="image-wrapper fade-in"><img src="Slide18.JPG" alt="What I bring with me"></div>
         </section>
-        <section id="work-experience" class="pdf-section">
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide5.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide6.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide7.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide8.pdf" type="application/pdf"></iframe>
-            </div>
+        <section id="education" class="image-section">
+            <div class="image-wrapper fade-in"><img src="Slide3.JPG" alt="Education"></div>
         </section>
-        <section id="thesis" class="pdf-section">
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide9.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide10.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide11.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide12.pdf" type="application/pdf"></iframe>
-            </div>
+        <section id="work-experience" class="image-section">
+            <div class="image-wrapper fade-in"><img src="Slide5.JPG" alt="Work experience"></div>
+            <div class="image-wrapper fade-in"><img src="Slide6.JPG" alt="JDM Innovation GmbH"></div>
+            <div class="image-wrapper fade-in"><img src="Slide7.JPG" alt="Robert Bosch GmbH"></div>
+            <div class="image-wrapper fade-in"><img src="Slide8.JPG" alt="Trueno"></div>
         </section>
-        <section id="projects" class="pdf-section">
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide16.pdf" type="application/pdf"></iframe>
-            </div>
+        <section id="thesis" class="image-section">
+            <div class="image-wrapper fade-in"><img src="Slide9.JPG" alt="Thesis"></div>
+            <div class="image-wrapper fade-in"><img src="Slide10.JPG" alt="Master Thesis"></div>
+            <div class="image-wrapper fade-in"><img src="Slide11.JPG" alt="Research Thesis"></div>
+            <div class="image-wrapper fade-in"><img src="Slide12.JPG" alt="Publication/Bachelor Thesis"></div>
         </section>
-        <section id="extracurriculars" class="pdf-section">
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide13.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide14.pdf" type="application/pdf"></iframe>
-            </div>
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide15.pdf" type="application/pdf"></iframe>
-            </div>
+        <section id="projects" class="image-section">
+            <div class="image-wrapper fade-in"><img src="Slide16.JPG" alt="Project"></div>
         </section>
-        <section id="contact" class="pdf-section">
-            <div class="pdf-wrapper">
-                <iframe class="pdf-iframe" src="pdf/Slide19.pdf" type="application/pdf"></iframe>
-            </div>
+        <section id="extracurriculars" class="image-section">
+            <div class="image-wrapper fade-in"><img src="Slide13.JPG" alt="Extracurriculars"></div>
+            <div class="image-wrapper fade-in"><img src="Slide14.JPG" alt="GreenTeam Uni Stuttgart e.V."></div>
+            <div class="image-wrapper fade-in"><img src="Slide15.JPG" alt="Orion Racing India"></div>
+        </section>
+        <section id="contact" class="image-section">
+            <div class="image-wrapper fade-in"><img src="Slide19.JPG" alt="Contact"></div>
         </section>
     </main>
+    <button class="next-section">Next</button>
+    <button class="back-section">Back</button>
+    <script src="script.js"></script>
 </body>
 </html>
-

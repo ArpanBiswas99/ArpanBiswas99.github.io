@@ -55,33 +55,31 @@ body, html {
     background-color: #555;
 }
 
-/* Main content styles */
+/* Main content styles for horizontal scrolling */
 main {
     display: flex;
-    flex-wrap: nowrap;
+    flex-direction: row; /* Change to horizontal layout */
     overflow-x: scroll; /* Enable horizontal scrolling */
     overflow-y: hidden; /* Disable vertical scrolling */
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory; /* Use mandatory for horizontal */
     scroll-behavior: smooth;
     white-space: nowrap;
     user-select: none;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     width: 100%; /* Make the content full-width */
 }
 
 /* Image section styles with padding at the top */
 .image-section {
-    display: flex; /* Display images in a row */
-    flex: 0 0 auto; /* Do not grow, do not shrink, basis is auto */
-    width: 100vw; /* Section width is full viewport width */
-    align-items: center; /* Align images vertically in the center */
-    justify-content: center; /* Center images horizontally */
-    position: relative; /* To position buttons and images */
-    transition: transform 1s ease-in-out; /* Smooth transition for scaling */
-    scroll-snap-align: center; /* Center image during scrolling */
-    overflow: hidden; /* Hide overflowing images */
-    padding-top: 50px; /* Add padding at the top of each section */
+    display: inline-block; /* Use inline-block for horizontal layout */
+    flex: 0 0 auto;
+    width: 100vw;
+    height: 100vh; /* Adjust height for horizontal layout */
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    scroll-snap-align: start; /* Adjust alignment for horizontal layout */
+    overflow: hidden;
+    padding-left: 50px; /* Add padding to the left of each section for horizontal layout */
 }
 
 
@@ -163,4 +161,3 @@ body, main {
     0% { opacity: 1; }
     100% { opacity: 0; }
 }
-
