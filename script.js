@@ -3,82 +3,85 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbarItems = document.querySelectorAll('.navbar li a');
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
-    let currentSectionIndex = 0;
-    let activeImageIndices = Array.from(sections).map(() => 0); // Track active image index for each section
 
-    const updateActiveImage = (sectionIndex, newIndex) => {
-        const images = sections[sectionIndex].querySelectorAll('.image-wrapper');
-        images.forEach((img, idx) => {
-            img.classList.remove('active', 'fade-in', 'fade-out');
-            if (idx === newIndex) {
-                img.classList.add('active', 'fade-in');
+    let currentSectionIndex = 0; // Tracks the current section
+    let currentImageIndices = Array.from({ length: sections.length }, () => 0); // Tracks the current image index for each section
+
+    function updateNavigation() {
+        // Update the visibility of the navigation buttons
+        backButton.style.visibility = (currentSectionIndex === 0 && currentImageIndices[0] === 0) ? 'hidden' : 'visible';
+        const lastSectionIndex = sections.length - 1;
+        const lastImageIndexInSection = sections[lastSectionIndex].querySelectorAll('.image-wrapper').length - 1;
+        nextButton.style.visibility = (currentSectionIndex === lastSectionIndex && currentImageIndices[lastSectionIndex] === lastImageIndexInSection) ? 'hidden' : 'visible';
+
+        // Highlight the current section in the navbar
+        navbarItems.forEach((item, index) => {
+            if (index === currentSectionIndex) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
             }
         });
-        activeImageIndices[sectionIndex] = newIndex; // Update active image index for the current section
-    };
+    }
 
-    const activateSection = (index) => {
-        // Deactivate all sections
-        sections.forEach((sec, idx) => {
-            if (idx !== index) {
-                sec.querySelectorAll('.image-wrapper').forEach(img => img.classList.remove('active', 'fade-in'));
-            }
-        });
+    function changeImage(direction) {
+        // Calculate the new image index
+        let newImageIndex = currentImageIndices[currentSectionIndex] + direction;
 
-        // Activate the first image of the new section if not already set
-        if (activeImageIndices[index] === 0) {
-            updateActiveImage(index, 0);
-        } else {
-            // If returning to a section, show the last viewed image
-            updateActiveImage(index, activeImageIndices[index]);
-        }
-
-        // Update navbar active state
-        navbarItems.forEach((item, navIdx) => {
-            item.classList.toggle('active', navIdx === index);
-        });
-
-        currentSectionIndex = index; // Update the current section index
-        updateButtonVisibility(); // Update button visibility based on the current section
-    };
-
-    const navigate = (direction) => {
+        // Get the current section and its images
         const currentSection = sections[currentSectionIndex];
         const images = currentSection.querySelectorAll('.image-wrapper');
-        let newIndex = activeImageIndices[currentSectionIndex] + direction;
 
-        if (newIndex >= 0 && newIndex < images.length) {
-            // Navigate within the current section
-            updateActiveImage(currentSectionIndex, newIndex);
-        } else {
-            // Move to the next or previous section if at the end or beginning of the current section
-            if (newIndex < 0 && currentSectionIndex > 0) {
-                activateSection(currentSectionIndex - 1); // Go to the last image of the previous section
-                updateActiveImage(currentSectionIndex, sections[currentSectionIndex].querySelectorAll('.image-wrapper').length - 1);
-            } else if (newIndex >= images.length && currentSectionIndex < sections.length - 1) {
-                activateSection(currentSectionIndex + 1); // Go to the first image of the next section
-                updateActiveImage(currentSectionIndex, 0);
-            }
+        if (newImageIndex >= 0 && newImageIndex < images.length) {
+            // Change image within the current section
+            images[currentImageIndices[currentSectionIndex]].classList.remove('active', 'fade-in');
+            images[currentImageIndices[currentSectionIndex]].classList.add('fade-out');
+            images[newImageIndex].classList.remove('fade-out');
+            images[newImageIndex].classList.add('active', 'fade-in');
+            currentImageIndices[currentSectionIndex] = newImageIndex;
+        } else if (newImageIndex < 0 && currentSectionIndex > 0) {
+            // Move to the previous section
+            currentSectionIndex--;
+            currentImageIndices[currentSectionIndex] = sections[currentSectionIndex].querySelectorAll('.image-wrapper').length - 1; // Last image of the previous section
+            updateSection();
+        } else if (newImageIndex >= images.length && currentSectionIndex < sections.length - 1) {
+            // Move to the next section
+            currentSectionIndex++;
+            currentImageIndices[currentSectionIndex] = 0; // First image of the next section
+            updateSection();
         }
-    };
 
-    const updateButtonVisibility = () => {
-        backButton.style.display = (currentSectionIndex === 0 && activeImageIndices[0] === 0) ? 'none' : 'block';
-        nextButton.style.display = (currentSectionIndex === sections.length - 1 && activeImageIndices[currentSectionIndex] === sections[currentSectionIndex].querySelectorAll('.image-wrapper').length - 1) ? 'none' : 'block';
-    };
+        updateNavigation();
+    }
 
-    // Event listeners for navigation buttons
-    nextButton.addEventListener('click', () => navigate(1));
-    backButton.addEventListener('click', () => navigate(-1));
+    function updateSection() {
+        // Update images for the new section
+        sections.forEach((section, index) => {
+            const images = section.querySelectorAll('.image-wrapper');
+            images.forEach((img, imgIndex) => {
+                img.classList.remove('active', 'fade-in', 'fade-out');
+                if (index === currentSectionIndex && imgIndex === currentImageIndices[currentSectionIndex]) {
+                    img.classList.add('active', 'fade-in');
+                }
+            });
+        });
 
-    // Navbar click events
+        updateNavigation();
+    }
+
+    // Attach event listeners to navigation buttons
+    nextButton.addEventListener('click', () => changeImage(1));
+    backButton.addEventListener('click', () => changeImage(-1));
+
+    // Navigation bar click events
     navbarItems.forEach((item, index) => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            activateSection(index);
+        item.addEventListener('click', () => {
+            currentSectionIndex = index;
+            currentImageIndices[currentSectionIndex] = 0; // Reset to the first image of the clicked section
+            updateSection();
         });
     });
 
-    // Initial activation of the first section
-    activateSection(0);
+    // Initialize
+    updateSection();
 });
