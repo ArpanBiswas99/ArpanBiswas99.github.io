@@ -1,0 +1,168 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Global styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* Disable vertical and horizontal scrolling */
+}
+
+/* Navigation bar styles */
+.navbar {
+    background-color: #333;
+    color: #fff;
+    width: 100%;
+    position: fixed; /* Fixed at the top */
+    top: 0;
+    left: 0;
+    z-index: 2000; /* Higher than other items to stay on top */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    display: flex; /* Center the navigation bar horizontally */
+    justify-content: center; /* Center the items horizontally */
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex; /* Align items in a row */
+    justify-content: center; /* Center items horizontally */
+}
+
+.navbar li {
+    float: center;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.navbar li a:hover, .navbar ul li.active a {
+    background-color: #555;
+}
+
+.navbar li a.active {
+    background-color: #555;
+}
+
+
+/* Main content styles for horizontal scrolling */
+main {
+    display: flex;
+    flex-direction: row; /* Change to horizontal layout */
+    overflow-x: scroll; /* Enable horizontal scrolling */
+    overflow-y: hidden; /* Disable vertical scrolling */
+    scroll-snap-type: x mandatory; /* Use mandatory for horizontal */
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    user-select: none;
+    width: 100%; /* Make the content full-width */
+}
+
+/* Image section styles with padding at the top */
+.image-section {
+    display: inline-block; /* Use inline-block for horizontal layout */
+    flex: 0 0 auto;
+    width: 100vw;
+    height: 100vh; /* Adjust height for horizontal layout */
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    scroll-snap-align: start; /* Adjust alignment for horizontal layout */
+    overflow: hidden;
+    padding-left: 50px; /* Add padding to the left of each section for horizontal layout */
+}
+
+
+/* Style for the active image */
+.image-wrapper.active {
+    display: block; /* Show the active image */
+}
+
+.image-wrapper:not(.active) {
+    display: none; /* Hide non-active images */
+}
+
+.image-wrapper.active img {
+    max-width: 100%; /* Ensure the image fits within the container */
+    max-height: 100vh; /* Make the active image fill the viewport vertically */
+    display: block; /* Remove any extra spacing below the image */
+    margin: 0 auto; /* Center the image horizontally */
+    opacity: 1; /* Active image is fully opaque */
+    transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
+}
+
+/* Next and Back buttons */
+.next-section, .back-section {
+    position: fixed;
+    bottom: 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    z-index: 1000; /* Make sure button is above all sections */
+    opacity: 0.5;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.back-section {
+    left: 20px;
+}
+
+.next-section {
+    right: 20px;
+}
+
+.next-section:hover, .back-section:hover {
+    opacity: 1; /* Fully opaque on hover */
+}
+
+
+/* Hide scrollbar for all browsers */
+body::-webkit-scrollbar, main::-webkit-scrollbar {
+    display: none;
+}
+
+body, main {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Fade in/out animations */
+/* Fade in/out animations with faster transition */
+.fade-in {
+    animation: fadeInAnimation ease 0.5s; /* Reduced from 1s to 0.5s */
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+.fade-out {
+    animation: fadeOutAnimation ease 0.5s; /* Reduced from 1s to 0.5s */
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeOutAnimation {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
