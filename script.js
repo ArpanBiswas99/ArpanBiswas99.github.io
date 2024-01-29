@@ -4,87 +4,74 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
     let currentSectionIndex = 0;
+    let activeImageIndices = Array.from(sections).map(() => 0); // Track active image index for each section
 
-    // Function to change the active image within a section
-    const changeActiveImage = (section, direction) => {
-        const activeWrapper = section.querySelector('.image-wrapper.active');
-        const images = section.querySelectorAll('.image-wrapper');
-        let newIndex = Array.from(images).indexOf(activeWrapper) + direction;
-
-        if (newIndex >= 0 && newIndex < images.length) {
-            activeWrapper.classList.remove('active', 'fade-in');
-            activeWrapper.classList.add('fade-out');
-            images[newIndex].classList.remove('fade-out');
-            images[newIndex].classList.add('active', 'fade-in');
-        }
-
-        return newIndex;
+    const updateActiveImage = (sectionIndex, newIndex) => {
+        const images = sections[sectionIndex].querySelectorAll('.image-wrapper');
+        images.forEach((img, idx) => {
+            img.classList.remove('active', 'fade-in', 'fade-out');
+            if (idx === newIndex) {
+                img.classList.add('active', 'fade-in');
+            }
+        });
+        activeImageIndices[sectionIndex] = newIndex; // Update active image index for the current section
     };
 
-    // Function to activate a specific section
     const activateSection = (index) => {
-        sections[currentSectionIndex].querySelector('.image-wrapper.active')?.classList.remove('active');
-        const newActiveSection = sections[index];
-        const firstImage = newActiveSection.querySelector('.image-wrapper');
-        firstImage.classList.add('active', 'fade-in');
-
-        navbarItems.forEach((item, i) => {
-            if (i === index) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
+        // Deactivate all sections
+        sections.forEach((sec, idx) => {
+            if (idx !== index) {
+                sec.querySelectorAll('.image-wrapper').forEach(img => img.classList.remove('active', 'fade-in'));
             }
         });
 
-        currentSectionIndex = index;
-        updateButtonVisibility();
+        // Activate the first image of the new section if not already set
+        if (activeImageIndices[index] === 0) {
+            updateActiveImage(index, 0);
+        } else {
+            // If returning to a section, show the last viewed image
+            updateActiveImage(index, activeImageIndices[index]);
+        }
+
+        // Update navbar active state
+        navbarItems.forEach((item, navIdx) => {
+            item.classList.toggle('active', navIdx === index);
+        });
+
+        currentSectionIndex = index; // Update the current section index
+        updateButtonVisibility(); // Update button visibility based on the current section
     };
 
-    // Update the visibility of next and back buttons
-    const updateButtonVisibility = () => {
-        backButton.style.display = currentSectionIndex === 0 ? 'none' : 'block';
-        nextButton.style.display = currentSectionIndex === sections.length - 1 ? 'none' : 'block';
-    };
-
-    // Navigate to the next or previous section/image
     const navigate = (direction) => {
         const currentSection = sections[currentSectionIndex];
-        const newIndex = changeActiveImage(currentSection, direction);
+        const images = currentSection.querySelectorAll('.image-wrapper');
+        let newIndex = activeImageIndices[currentSectionIndex] + direction;
 
-        if (newIndex < 0 && currentSectionIndex > 0) {
-            activateSection(currentSectionIndex - 1);
-        } else if (newIndex >= currentSection.querySelectorAll('.image-wrapper').length && currentSectionIndex < sections.length - 1) {
-            activateSection(currentSectionIndex + 1);
+        if (newIndex >= 0 && newIndex < images.length) {
+            // Navigate within the current section
+            updateActiveImage(currentSectionIndex, newIndex);
+        } else {
+            // Move to the next or previous section if at the end or beginning of the current section
+            if (newIndex < 0 && currentSectionIndex > 0) {
+                activateSection(currentSectionIndex - 1); // Go to the last image of the previous section
+                updateActiveImage(currentSectionIndex, sections[currentSectionIndex].querySelectorAll('.image-wrapper').length - 1);
+            } else if (newIndex >= images.length && currentSectionIndex < sections.length - 1) {
+                activateSection(currentSectionIndex + 1); // Go to the first image of the next section
+                updateActiveImage(currentSectionIndex, 0);
+            }
         }
     };
 
-    // Event listeners for next and back buttons
+    const updateButtonVisibility = () => {
+        backButton.style.display = (currentSectionIndex === 0 && activeImageIndices[0] === 0) ? 'none' : 'block';
+        nextButton.style.display = (currentSectionIndex === sections.length - 1 && activeImageIndices[currentSectionIndex] === sections[currentSectionIndex].querySelectorAll('.image-wrapper').length - 1) ? 'none' : 'block';
+    };
+
+    // Event listeners for navigation buttons
     nextButton.addEventListener('click', () => navigate(1));
     backButton.addEventListener('click', () => navigate(-1));
 
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') {
-            navigate(1);
-        } else if (e.key === 'ArrowLeft') {
-            navigate(-1);
-        }
-    });
-
-    // Scroll navigation
-    let lastScrollPosition = 0;
-    window.addEventListener('wheel', (e) => {
-        const delta = e.deltaY > 0 ? 1 : -1;
-
-        if (Math.abs(lastScrollPosition - window.scrollY) < window.innerHeight * 0.9) {
-            e.preventDefault();
-            navigate(delta);
-        }
-
-        lastScrollPosition = window.scrollY;
-    });
-
-    // Navigation bar links
+    // Navbar click events
     navbarItems.forEach((item, index) => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -94,21 +81,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial activation of the first section
     activateSection(0);
-
-    // Update navigation bar based on scroll position
-    window.addEventListener('scroll', () => {
-        const scrollPosition = window.scrollY;
-        sections.forEach((section, index) => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                navbarItems.forEach((navItem, navIndex) => {
-                    navItem.classList.toggle('active', index === navIndex);
-                });
-                currentSectionIndex = index;
-                updateButtonVisibility();
-            }
-        });
-    });
 });
