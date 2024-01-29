@@ -4,54 +4,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
     let currentSectionIndex = 0;
-    let currentPDFIndex = 0;
+    let isScrolling;
 
-    function updateActiveSection(index) {
+    // Function to change the current section and highlight the navbar item
+    function changeSection(index) {
         currentSectionIndex = index;
-        currentPDFIndex = 0; // Reset PDF index to show the first PDF in the new section
         navbarItems.forEach((item, idx) => item.classList.toggle('active', idx === index));
-        scrollToCurrentPDF();
+        sections[index].scrollIntoView({ behavior: 'smooth' });
     }
 
-    function updateActivePDFIndex(direction) {
-        const currentSection = sections[currentSectionIndex];
-        const pdfs = currentSection.querySelectorAll('.pdf-iframe');
-        let newIndex = currentPDFIndex + direction;
-
-        if (newIndex >= 0 && newIndex < pdfs.length) {
-            currentPDFIndex = newIndex;
-        } else if (newIndex < 0 && currentSectionIndex > 0) {
-            updateActiveSection(currentSectionIndex - 1);
-        } else if (newIndex >= pdfs.length && currentSectionIndex < sections.length - 1) {
-            updateActiveSection(currentSectionIndex + 1);
-        }
-
-        scrollToCurrentPDF();
-    }
-
-    function scrollToCurrentPDF() {
-        const currentSection = sections[currentSectionIndex];
-        const pdfs = currentSection.querySelectorAll('.pdf-wrapper');
-        if (pdfs[currentPDFIndex]) {
-            pdfs[currentPDFIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Function to handle next and back navigation
+    function navigate(direction) {
+        let newIndex = currentSectionIndex + direction;
+        if (newIndex >= 0 && newIndex < sections.length) {
+            changeSection(newIndex);
         }
     }
 
-    nextButton.addEventListener('click', () => updateActivePDFIndex(1));
-    backButton.addEventListener('click', () => updateActivePDFIndex(-1));
+    // Scroll event listener for mouse wheel scrolling
+    window.addEventListener('wheel', (e) => {
+        clearTimeout(isScrolling);
+        isScrolling = setTimeout(() => {
+            if (e.deltaY > 0) {
+                navigate(1); // Scroll down
+            } else {
+                navigate(-1); // Scroll up
+            }
+        }, 66); // 66ms timeout for debouncing rapid scrolls
+    }, false);
 
+    // Event listeners for "Next" and "Back" buttons
+    nextButton.addEventListener('click', () => navigate(1));
+    backButton.addEventListener('click', () => navigate(-1));
+
+    // Keyboard navigation with arrow keys
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-            updateActivePDFIndex(1);
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-            updateActivePDFIndex(-1);
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            navigate(1);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            navigate(-1);
         }
     });
 
+    // Navigation bar item click event
     navbarItems.forEach((item, index) => {
-        item.addEventListener('click', () => updateActiveSection(index));
+        item.addEventListener('click', () => changeSection(index));
     });
 
-    // Initialize the first section and the first PDF as active
-    updateActiveSection(0);
+    // Initialize the first section as active
+    changeSection(0);
 });
