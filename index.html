@@ -53,13 +53,30 @@
         }
 
         main {
-            padding-top: 50px; /* Adjust based on the navbar's height */
+            display: flex;
+            flex-direction: row;
+            width: calc(100vw * number_of_sections); /* Replace with the actual number of sections */
+            height: calc(100vh - 50px); /* Assuming 50px navbar height */
+            overflow-x: scroll;
+            scroll-snap-type: x mandatory; /* Ensures that the scrolling snaps to the sections */
         }
 
         .pdf-section {
             width: 100vw;
-            overflow: auto;
+            height: calc(100vh - 50px); /* Assuming 50px navbar height */
+            flex-shrink: 0;
+            scroll-snap-align: start; /* Aligns the snap point */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out; /* Fade transition */
         }
+
+        .pdf-section.active {
+            opacity: 1; /* Only active section is fully visible */
+        }
+
 
         .pdf-wrapper {
             height: calc(100vh - 50px); /* Adjust based on the navbar's height */
