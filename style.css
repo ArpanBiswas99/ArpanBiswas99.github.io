@@ -12,8 +12,7 @@ body, html {
     background-color: #121212;
     color: #fff;
     font-family: Arial, sans-serif;
-    overflow-x: hidden; /* Still prevent horizontal scrolling */
-    overflow-y: auto; /* Enable vertical scrolling */
+    overflow: hidden; /* Disable vertical and horizontal scrolling */
 }
 
 /* Navigation bar styles */
@@ -91,13 +90,15 @@ img {
     max-width: 100%;
     max-height: 100%;
     object-fit: cover; /* Make the image cover the entire container */
-    opacity: 0.3; /* Reduce opacity for non-focused images */
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* Transition for fading and scaling */
+    opacity: 0; /* Start with images invisible */
+    transition: opacity 1s ease-in-out; /* Transition for fading in */
 }
 
-img.focus {
-    opacity: 1; /* Full opacity for focused image */
-    transform: scale(1.1); /* Slightly scale up the focused image */
+img.visible {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover; /* Make the image cover the entire container */
+    opacity: 1; /* Start with images invisible */
 }
 
 /* Next and Back buttons */
