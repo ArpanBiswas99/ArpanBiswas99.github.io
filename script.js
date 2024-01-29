@@ -62,9 +62,20 @@ document.addEventListener('DOMContentLoaded', () => {
     nextButton.addEventListener('click', () => updateActiveImage(1));
     backButton.addEventListener('click', () => updateActiveImage(-1));
 
-    // Navigation bar clicks
-    navbarItems.forEach((item, index) => {
-        item.addEventListener('click', () => changeSection(index));
+    // Detect the end of the current section and snap to the next section
+    sections.forEach((section, index) => {
+        section.addEventListener('scroll', () => {
+            const scrollWidth = section.scrollWidth;
+            const scrollLeft = section.scrollLeft;
+            const sectionWidth = section.offsetWidth;
+
+            if (scrollLeft === scrollWidth - sectionWidth) {
+                // Scrolled to the end of the section
+                if (currentSectionIndex < sections.length - 1) {
+                    changeSection(currentSectionIndex + 1);
+                }
+            }
+        });
     });
 
     // Initialize the first section as active
