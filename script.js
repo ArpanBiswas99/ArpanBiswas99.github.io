@@ -4,16 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
     let currentSectionIndex = 0;
-    let lastScrollX = window.scrollX; // Use scrollX for horizontal scrolling
-
-    // Initialize the active image in each section
-    sections.forEach((section, index) => {
-        const images = section.querySelectorAll('.image-wrapper');
-        images.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
-    });
+    let isScrolling = false;
 
     // Function to update the active image in the current section
     function updateActiveImage(direction) {
+        if (isScrolling) return;
+
+        isScrolling = true;
         const images = sections[currentSectionIndex].querySelectorAll('.image-wrapper');
         const activeIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
         let newIndex = activeIndex + direction;
@@ -29,6 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 changeSection(currentSectionIndex - 1);
             }
         }
+
+        setTimeout(() => {
+            isScrolling = false;
+        }, 800); // Delay scrolling for smoother transition
     }
 
     // Function to change the current section and highlight the navbar
@@ -39,11 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
         newSectionImages.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
     }
 
-    // Scroll event to handle navigation between images and sections
-    window.addEventListener('scroll', () => {
-        const direction = window.scrollX > lastScrollX ? 1 : -1; // Use scrollX for horizontal scrolling
-        updateActiveImage(direction);
-        lastScrollX = window.scrollX; // Use scrollX for horizontal scrolling
+    // Mousewheel event to handle navigation between sections
+    document.addEventListener('mousewheel', (e) => {
+        if (e.deltaY > 0) {
+            updateActiveImage(1);
+        } else if (e.deltaY < 0) {
+            updateActiveImage(-1);
+        }
     });
 
     // Keyboard navigation with arrow keys
