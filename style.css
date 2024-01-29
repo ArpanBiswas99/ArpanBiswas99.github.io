@@ -55,6 +55,11 @@ body, html {
     background-color: #555;
 }
 
+.navbar li a.active {
+    background-color: #555;
+}
+
+
 /* Main content styles for horizontal scrolling */
 main {
     display: flex;
