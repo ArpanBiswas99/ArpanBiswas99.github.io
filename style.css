@@ -57,45 +57,48 @@ body, html {
 
 /* Main content styles */
 main {
-    padding-top: 50px; /* Height of navbar */
     display: flex;
-    flex-direction: row;
+    flex-wrap: nowrap; /* Prevent wrapping of sections */
     overflow-x: scroll; /* Enable horizontal scrolling */
-    scroll-snap-type: x mandatory; /* Enable snap scrolling */
+    scroll-snap-type: x proximity; /* Snapping effect */
+    scroll-behavior: smooth; /* Smooth scrolling */
 }
 
 /* Image section styles */
 .image-section {
-    scroll-snap-align: start; /* Ensure sections snap into place */
-    display: flex; /* Use flex to align image wrappers */
-    justify-content: center; /* Center image wrappers horizontally */
-    flex: 0 0 100%; /* Each section occupies full viewport width */
-    min-height: 100vh; /* Ensure each section occupies full viewport height */
-    position: relative; /* To position buttons */
-    text-align: center; /* Center text content */
+    display: flex; /* Display images in a row */
+    flex: 0 0 auto; /* Do not grow, do not shrink, basis is auto */
+    width: 100vw; /* Section width is full viewport width */
+    align-items: center; /* Align images vertically in the center */
+    justify-content: center; /* Center images horizontally */
+    position: relative; /* To position buttons and images */
+    transition: transform 1s ease-in-out; /* Smooth transition for scaling */
 }
 
 .image-wrapper {
-    display: inline-flex; /* Make the image wrappers inline and flexible */
-    flex-direction: column; /* Align children (images) in a column */
-    justify-content: center; /* Center images vertically */
-    align-items: center; /* Center images horizontally */
-    width: 100%; /* Full width of the section */
-    height: 100vh; /* Full height of the viewport */
-    opacity: 0.5; /* Start with wrappers translucent */
-    transition: opacity 1s ease-in-out, transform 1s ease-in-out; /* Transition for fading and scaling */
+    margin: 0 5vw; /* Space between images for multi-image sections */
+    opacity: 0.5; /* Non-active images are more translucent */
+    transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
 }
 
-.image-wrapper.active {
-    opacity: 1; /* Full opacity for active image */
-    transform: scale(1.1); /* Slightly scale up the active image */
+/* Style for all images */
+.image-wrapper img {
+    width: auto; /* Maintain aspect ratio */
+    height: 70vh; /* Adjust height to fit within the viewport */
+    object-fit: contain; /* Ensure the image fits within the container without being cropped */
+}
+
+/* Styles for the active image */
+.image-wrapper.active img {
+    height: 80vh; /* Make the active image larger, consistent in all sections */
+    opacity: 1; /* Active image is fully opaque */
 }
 
 /* Style for images */
 img {
-    max-width: 100%;
-    max-height: 100vh; /* Limit image height to viewport height */
-    object-fit: contain; /* Ensure the image is scaled to fit while maintaining aspect ratio */
+    width: 100%; /* Image width is full container width */
+    height: auto; /* Height is auto to maintain aspect ratio */
+    object-fit: contain; /* Ensure the image fits within the container */
 }
 
 /* Next and Back buttons */
