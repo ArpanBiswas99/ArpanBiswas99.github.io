@@ -41,6 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const images = Array.from(sections[currentSectionIndex].querySelectorAll('img'));
         images.forEach(img => img.style.display = 'none');
         images[newIndex].style.display = 'block';
+        updateScrollbarText(images[newIndex].alt);
+    }
+
+    function updateScrollbarText(text) {
+        const section = sections[currentSectionIndex];
+        const scrollbarThumb = section.parentElement.querySelector('.scrollbar-thumb');
+        if (scrollbarThumb) {
+            scrollbarThumb.textContent = text;
+        }
     }
 
     function nextImage() {
@@ -67,6 +76,19 @@ document.addEventListener('DOMContentLoaded', () => {
             changeSection(currentSectionIndex - 1);
         }
     }
+
+    // Scroll event listener to handle scrolling within a section
+    sections.forEach((section, index) => {
+        section.addEventListener('scroll', () => {
+            // Calculate the scroll progress as a percentage
+            const scrollProgress = (section.scrollTop / (section.scrollHeight - section.clientHeight)) * 100;
+
+            // Check if the scroll progress is at the bottom of the section
+            if (scrollProgress >= 95) {
+                nextImage();
+            }
+        });
+    });
 
     // Event listeners for Next and Back buttons
     nextButton.addEventListener('click', nextSection);
