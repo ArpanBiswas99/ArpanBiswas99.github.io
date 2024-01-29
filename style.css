@@ -51,38 +51,44 @@ body, html {
     transition: background-color 0.3s;
 }
 
-.navbar li a:hover {
+.navbar li a:hover, .navbar ul li.active a {
     background-color: #555;
 }
 
 /* Main content styles */
 main {
     padding-top: 50px; /* Height of navbar */
-}
-
-/* Scrollbar styling */
-body::-webkit-scrollbar {
-    width: 8px;
-}
-
-body::-webkit-scrollbar-thumb {
-    background-color: #555;
-    border-radius: 4px;
-}
-
-/* Highlight the active menu item */
-.navbar ul li.active a {
-    background-color: #555;
-    color: #fff;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll; /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Enable snap scrolling */
 }
 
 /* Image section styles */
 .image-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    scroll-snap-align: start; /* Ensure sections snap into place */
+    display: flex; /* Use flex to align image wrappers */
+    justify-content: center; /* Center image wrappers horizontally */
+    flex: 0 0 100%; /* Each section occupies full viewport width */
+    min-height: 100vh; /* Ensure each section occupies full viewport height */
     position: relative; /* To position buttons */
+    text-align: center; /* Center text content */
+}
+
+.image-wrapper {
+    display: inline-flex; /* Make the image wrappers inline and flexible */
+    flex-direction: column; /* Align children (images) in a column */
+    justify-content: center; /* Center images vertically */
+    align-items: center; /* Center images horizontally */
+    width: 100%; /* Full width of the section */
+    height: 100vh; /* Full height of the viewport */
+    opacity: 0.5; /* Start with wrappers translucent */
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out; /* Transition for fading and scaling */
+}
+
+.image-wrapper.active {
+    opacity: 1; /* Full opacity for active image */
+    transform: scale(1.1); /* Slightly scale up the active image */
 }
 
 /* Style for images */
@@ -90,15 +96,6 @@ img {
     max-width: 100%;
     max-height: 100%;
     object-fit: cover; /* Make the image cover the entire container */
-    opacity: 0; /* Start with images invisible */
-    transition: opacity 1s ease-in-out; /* Transition for fading in */
-}
-
-img.visible {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover; /* Make the image cover the entire container */
-    opacity: 1; /* Start with images invisible */
 }
 
 /* Next and Back buttons */
@@ -115,23 +112,14 @@ img.visible {
     transition: opacity 0.3s ease-in-out;
 }
 
-/* Place the "Back" button on the left */
 .back-section {
     left: 20px;
 }
 
-/* Place the "Next" button on the right */
 .next-section {
     right: 20px;
 }
 
-/* Show Next and Back buttons on hover */
 .next-section:hover, .back-section:hover {
     opacity: 1; /* Fully opaque on hover */
-}
-
-/* Keyframes for fadeIn animation */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
