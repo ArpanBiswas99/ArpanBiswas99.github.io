@@ -1,23 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.image-section');
     let currentSectionIndex = 0;
-    const allImages = document.querySelectorAll('.image-wrapper img'); // Select all images
-    const navbarItems = document.querySelectorAll('.navbar li a'); // Select navbar items
+    const allImages = document.querySelectorAll('.image-wrapper img');
+    const navbarItems = document.querySelectorAll('.navbar li a');
 
     function activateSection(index) {
         allImages.forEach(img => {
             img.parentElement.classList.remove('active');
+            img.style.opacity = 0; // Hide images
         });
 
         const targetSection = sections[index];
         const images = targetSection.querySelectorAll('.image-wrapper img');
-        
+
         images.forEach(img => {
             img.parentElement.classList.remove('active');
         });
 
         if (images.length > 0) {
             images[0].parentElement.classList.add('active');
+            fadeIn(images[0]); // Show the first image with fade-in effect
         }
 
         currentSectionIndex = index;
@@ -33,6 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
             item.classList.remove('active');
         });
         navbarItems[index].classList.add('active');
+    }
+
+    // Function to apply fade-in effect to an element
+    function fadeIn(element) {
+        let opacity = 0;
+        const fadeInInterval = setInterval(() => {
+            opacity += 0.02;
+            element.style.opacity = opacity;
+            if (opacity >= 1) {
+                clearInterval(fadeInInterval);
+            }
+        }, 10);
     }
     
 
