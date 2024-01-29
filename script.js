@@ -71,12 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Button navigation
     nextButton.addEventListener('click', () => {
         updateActiveImage(1);
-        changeSection(currentSectionIndex); // Ensure that section change updates the active image
     });
 
     backButton.addEventListener('click', () => {
         updateActiveImage(-1);
-        changeSection(currentSectionIndex); // Ensure that section change updates the active image
     });
 
     // Navigation bar clicks
