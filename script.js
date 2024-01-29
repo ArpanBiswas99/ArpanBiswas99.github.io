@@ -85,13 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.querySelector("a[href='#who-am-i']").addEventListener("click", function() {
-        gtag("event", "link_click", {
-          "event_category": "navigation",
-          "event_label": "Who Am I Link"
-        });
-    });
-
     // Initialize the first section as active
     changeSection(0);
 });
