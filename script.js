@@ -1,28 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.image-section');
     let currentSectionIndex = 0;
+    const allImages = document.querySelectorAll('.image-wrapper img');
     const navbarItems = document.querySelectorAll('.navbar li a');
 
     function activateSection(index) {
+        allImages.forEach(img => {
+            img.parentElement.classList.remove('active');
+            img.style.opacity = 0; // Hide all images
+        });
+
         const targetSection = sections[index];
         const images = targetSection.querySelectorAll('.image-wrapper img');
-        const activeImage = targetSection.querySelector('.image-wrapper.active img');
+        
+        images.forEach(img => {
+            img.parentElement.classList.remove('active');
+        });
 
-        // Fade out the currently active image
-        if (activeImage) {
-            activeImage.style.opacity = 0;
-            setTimeout(() => {
-                activeImage.style.display = 'none';
-            }, 500); // Adjust the duration of the fade out as needed
-        }
-
-        // Activate the next image and fade it in
         if (images.length > 0) {
-            const nextImage = images[0];
-            nextImage.style.display = 'block';
-            setTimeout(() => {
-                nextImage.style.opacity = 1;
-            }, 100); // Adjust the duration of the fade in as needed
+            images[0].parentElement.classList.add('active');
+            fadeIn(images[0]); // Fade in the first image
         }
 
         currentSectionIndex = index;
@@ -34,51 +31,109 @@ document.addEventListener('DOMContentLoaded', () => {
         navbarItems[index].classList.add('active');
     }
 
-    function showNextImage() {
+    function fadeIn(element) {
+        let opacity = 0;
+        element.style.opacity = 0;
+        const interval = setInterval(() => {
+            if (opacity < 1) {
+                opacity += 0.1;
+                element.style.opacity = opacity;
+            } else {
+                clearInterval(interval);
+            }
+        }, 100);
+    }
+
+    function showImage(offset) {
         const currentSection = sections[currentSectionIndex];
-        const images = currentSection.querySelectorAll('.image-wrapper img');
-        const activeImage = currentSection.querySelector('.image-wrapper.active img');
-        const currentIndex = Array.from(images).indexOf(activeImage);
-        let newIndex = (currentIndex + 1) % images.length;
+        const wrappers = currentSection.querySelectorAll('.image-wrapper');
+        const activeWrapper = currentSection.querySelector('.image-wrapper.active');
+        let newActiveIndex = Array.from(wrappers).indexOf(activeWrapper) + offset;
+    
+        if (newActiveIndex >= 0 && newActiveIndex < wrappers.length) {
+            wrappers.forEach(wrapper => wrapper.classList.remove('active'));
+            wrappers[newActiveIndex].classList.add('active');
+    
+            // Fade in the new active image
+            const newActiveImage = wrappers[newActiveIndex].querySelector('img');
+            fadeIn(newActiveImage);
 
-        // Fade out the currently active image
-        if (activeImage) {
-            activeImage.style.opacity = 0;
-            setTimeout(() => {
-                activeImage.style.display = 'none';
-            }, 500); // Adjust the duration of the fade out as needed
+            // Scroll horizontally to the new active image
+            const mainElement = document.querySelector('main');
+            mainElement.scroll({
+                left: newActiveImage.offsetLeft,
+                behavior: 'smooth',
+            });
+        } else if (newActiveIndex < 0 && currentSectionIndex > 0) {
+            activateSection(currentSectionIndex - 1);
+        } else if (newActiveIndex >= wrappers.length && currentSectionIndex < sections.length - 1) {
+            activateSection(currentSectionIndex + 1);
         }
-
-        // Activate the next image and fade it in
-        const nextImage = images[newIndex];
-        nextImage.style.display = 'block';
-        setTimeout(() => {
-            nextImage.style.opacity = 1;
-        }, 100); // Adjust the duration of the fade in as needed
     }
 
     const backButton = document.querySelector('.back-section');
     const nextButton = document.querySelector('.next-section');
 
-    nextButton.addEventListener('click', showNextImage);
+    nextButton.addEventListener('click', () => showImage(1));
+    backButton.addEventListener('click', () => showImage(-1));
 
-    // Use Intersection Observer to track section visibility
-    const observerOptions = {
-        rootMargin: '0px',
-        threshold: 0.5, // Adjust this threshold as needed
-    };
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+            showImage(1);
+        } else if (e.key === 'ArrowLeft') {
+            showImage(-1);
+        }
+    });
 
-    const sectionObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const index = Array.from(sections).indexOf(entry.target);
-                activateSection(index);
+    // Adjusted the scroll sensitivity
+    let scrollTimeout;
+    document.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            if (e.deltaY > 10) {
+                showImage(1);
+            } else if (e.deltaY < -10) {
+                showImage(-1);
             }
-        });
-    }, observerOptions);
+        }, 200);
+    });
 
-    sections.forEach(section => {
-        sectionObserver.observe(section);
+    // Linked navbar with scrolling and highlighted the sections
+    navbarItems.forEach((item, index) => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            activateSection(index);
+        });
+    });
+
+    // Detect section changes during scrolling and activate the corresponding section
+    let isScrolling;
+    document.addEventListener('scroll', () => {
+        clearTimeout(isScrolling);
+        isScrolling = setTimeout(() => {
+            const viewportHeight = window.innerHeight;
+            const scrollPosition = window.scrollY;
+
+            for (let i = 0; i < sections.length; i++) {
+                const section = sections[i];
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.clientHeight;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                    activateSection(i);
+                    break;
+                }
+            }
+        }, 200);
+    });
+
+    // Link navbar items to sections
+    navbarItems.forEach((item, index) => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            activateSection(index);
+        });
     });
 
     // Function to update navbar based on the current section

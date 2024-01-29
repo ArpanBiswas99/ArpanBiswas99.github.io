@@ -13,7 +13,6 @@ body, html {
     color: #fff;
     font-family: Arial, sans-serif;
     overflow: hidden; /* Disable vertical and horizontal scrolling */
-    max-width: 100%; /* Ensure content does not exceed viewport width */
 }
 
 /* Navigation bar styles */
@@ -102,11 +101,6 @@ main {
     transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
 }
 
-.image-wrapper img {
-    max-width: 100%; /* Ensure images do not exceed viewport width */
-    height: auto; /* Maintain aspect ratio */
-}
-
 /* Next and Back buttons */
 .next-section, .back-section {
     position: fixed;
@@ -132,5 +126,3 @@ main {
 .next-section:hover, .back-section:hover {
     opacity: 1; /* Fully opaque on hover */
 }
-
-
