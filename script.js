@@ -9,24 +9,26 @@ document.addEventListener('DOMContentLoaded', () => {
         allImages.forEach(img => {
             img.parentElement.classList.remove('active'); // Remove 'active' from the wrapper
         });
-    
+
         const targetSection = sections[index];
         const images = targetSection.querySelectorAll('.image-wrapper img');
-        const activeImage = images[0]; // Display the first image by default
-        activeImage.parentElement.classList.add('active');
-    
+        if (images.length === 1) {
+            // If there's only one image in the section, make it active
+            images[0].parentElement.classList.add('active');
+        } else if (images.length > 1) {
+            // If there are multiple images, activate the first one by default
+            images[0].parentElement.classList.add('active');
+        }
+
         currentSectionIndex = index; // Update the current section index
-        // Scroll the active image or section into view at the start of the section
+        // Scroll the active image or section into view
         const activeWrapper = targetSection.querySelector('.image-wrapper.active');
         if (activeWrapper) {
-            activeWrapper.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+            activeWrapper.scrollIntoView({ behavior: 'smooth', inline: 'center' });
         } else {
-            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+            targetSection.scrollIntoView({ behavior: 'smooth' });
         }
-        // Highlight the corresponding navbar item
-        navbarItems.forEach(item => item.classList.remove('active'));
-        navbarItems[index].classList.add('active');
-    }    
+    } 
     
 
     // Navigate to the next or previous image within the current section
@@ -121,5 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200);
     });
 
-    activateSection(0);
+    // Link navbar items to sections
+    navbarItems.forEach((item, index) => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            activateSection(index);
+        });
+    });
+
+    activateSection(0); // Activate the first section by default
 });
