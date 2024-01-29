@@ -23,6 +23,8 @@ body, html {
     left: 0;
     z-index: 2000; /* Higher than other items to stay on top */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    display: flex; /* Center the navigation bar horizontally */
+    justify-content: center; /* Center the items horizontally */
 }
 
 .navbar ul {
@@ -104,7 +106,6 @@ body::-webkit-scrollbar-thumb {
     display: block; /* Show only the active image */
 }
 
-
 /* Next and Back buttons */
 .next-section, .back-section {
     position: fixed;
@@ -119,12 +120,14 @@ body::-webkit-scrollbar-thumb {
     transition: opacity 0.3s ease-in-out;
 }
 
-.next-section:hover, .back-section:hover {
-    opacity: 1; /* Fully opaque on hover */
+/* Place the "Back" button on the left */
+.back-section {
+    left: 20px;
 }
 
-.back-section {
-    left: 20px; /* Position the back button on the left */
+/* Place the "Next" button on the right */
+.next-section {
+    right: 20px;
 }
 
 /* Show Next and Back buttons on hover */
