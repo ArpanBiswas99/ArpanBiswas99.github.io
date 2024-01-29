@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sections[currentSectionIndex].classList.add('active');
         showImage(currentImageIndex);
 
-        // Highlight the corresponding menu item
         navbarItems.forEach((item, index) => {
             item.classList.remove('active');
             if (index === currentSectionIndex) {
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Show/hide Next and Back buttons based on section index
         if (currentSectionIndex === 0) {
             backButton.style.display = 'none';
         } else {
@@ -41,15 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const images = Array.from(sections[currentSectionIndex].querySelectorAll('img'));
         images.forEach(img => img.style.display = 'none');
         images[newIndex].style.display = 'block';
-        updateScrollbarText(images[newIndex].alt);
-    }
-
-    function updateScrollbarText(text) {
-        const section = sections[currentSectionIndex];
-        const scrollbarThumb = section.parentElement.querySelector('.scrollbar-thumb');
-        if (scrollbarThumb) {
-            scrollbarThumb.textContent = text;
-        }
     }
 
     function nextImage() {
@@ -77,23 +66,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Scroll event listener to handle scrolling within a section
-    sections.forEach((section, index) => {
-        section.addEventListener('scroll', () => {
-            // Calculate the scroll progress as a percentage
-            const scrollProgress = (section.scrollTop / (section.scrollHeight - section.clientHeight)) * 100;
+    nextButton.addEventListener('click', nextSection);
+    backButton.addEventListener('click', previousSection);
 
-            // Check if the scroll progress is at the bottom of the section
+    changeSection(0);
+
+    sections.forEach((section) => {
+        section.addEventListener('scroll', () => {
+            const scrollProgress = (section.scrollTop / (section.scrollHeight - section.clientHeight)) * 100;
             if (scrollProgress >= 95) {
                 nextImage();
             }
         });
     });
 
-    // Event listeners for Next and Back buttons
-    nextButton.addEventListener('click', nextSection);
-    backButton.addEventListener('click', previousSection);
-
-    // Initialize the first section and image
-    changeSection(0);
+    document.addEventListener('keydown', (e) => {
+        switch (e.key) {
+            case 'ArrowLeft':
+                previousSection();
+                break;
+            case 'ArrowRight':
+                nextSection();
+                break;
+            case 'ArrowUp':
+                previousImage();
+                break;
+            case 'ArrowDown':
+                nextImage();
+                break;
+        }
+    });
 });

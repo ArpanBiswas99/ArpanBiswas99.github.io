@@ -7,10 +7,10 @@
 
 /* Global styles */
 body, html {
-    background-color: #121212; /* Match this with the image background */
+    background-color: #121212;
     color: #fff;
     font-family: Arial, sans-serif;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
 }
 
 /* Navigation bar styles */
@@ -18,13 +18,13 @@ body, html {
     background-color: #333;
     color: #fff;
     width: 100%;
-    position: fixed; /* Fixed at the top */
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 2000; /* Higher than other items to stay on top */
+    z-index: 2000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    display: flex; /* Center the navigation bar horizontally */
-    justify-content: center; /* Center the items horizontally */
+    display: flex;
+    justify-content: center;
 }
 
 .navbar ul {
@@ -32,8 +32,8 @@ body, html {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    display: flex; /* Align items in a row */
-    justify-content: center; /* Center items horizontally */
+    display: flex;
+    justify-content: center;
 }
 
 .navbar li {
@@ -55,7 +55,7 @@ body, html {
 
 /* Main content styles */
 main {
-    padding-top: 50px; /* Height of navbar */
+    padding-top: 50px;
 }
 
 /* Scrollbar styling */
@@ -76,37 +76,32 @@ body::-webkit-scrollbar-thumb {
 
 /* Image section styles */
 .image-section {
-    display: none; /* Hide sections */
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     min-height: 100vh;
-    position: relative; /* To position buttons */
+    position: relative;
 }
 
-/* Display the active section */
 .image-section.active {
     display: flex;
     opacity: 1;
     transform: translateY(0);
 }
 
-/* Style for images */
 .image-section img {
     max-width: 100%;
-    max-height: 80vh; /* Adjust based on your content */
-    opacity: 1; /* Start with images visible */
-    transition: opacity 1s ease-in-out; /* Transition for fading in */
-    display: none; /* Hide images by default */
+    max-height: 80vh;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
 
-/* Show the active image */
 .image-section img.active {
-    display: block; /* Show only the active image */
+    display: block;
 }
 
-/* Next and Back buttons */
 .next-section, .back-section {
     position: fixed;
     bottom: 20px;
@@ -120,22 +115,18 @@ body::-webkit-scrollbar-thumb {
     transition: opacity 0.3s ease-in-out;
 }
 
-/* Place the "Back" button on the left */
 .back-section {
     left: 20px;
 }
 
-/* Place the "Next" button on the right */
 .next-section {
     right: 20px;
 }
 
-/* Show Next and Back buttons on hover */
 .next-section:hover, .back-section:hover {
-    opacity: 1; /* Fully opaque on hover */
+    opacity: 1;
 }
 
-/* Keyframes for fadeIn animation */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
