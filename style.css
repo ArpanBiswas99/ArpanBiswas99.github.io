@@ -85,6 +85,14 @@ main {
 }
 
 /* Style for the active image */
+.image-wrapper.active {
+    display: block; /* Show the active image */
+}
+
+.image-wrapper:not(.active) {
+    display: none; /* Hide non-active images */
+}
+
 .image-wrapper.active img {
     max-width: 100%; /* Ensure the image fits within the container */
     max-height: 100vh; /* Make the active image fill the viewport vertically */

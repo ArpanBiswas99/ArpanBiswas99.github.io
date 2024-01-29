@@ -16,17 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
         activeImage.parentElement.classList.add('active');
     
         currentSectionIndex = index; // Update the current section index
-        // Scroll the active image or section into view
+        // Scroll the active image or section into view at the start of the section
         const activeWrapper = targetSection.querySelector('.image-wrapper.active');
         if (activeWrapper) {
-            activeWrapper.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+            activeWrapper.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
         } else {
-            targetSection.scrollIntoView({ behavior: 'smooth' });
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
         }
         // Highlight the corresponding navbar item
         navbarItems.forEach(item => item.classList.remove('active'));
         navbarItems[index].classList.add('active');
-    }
+    }    
     
 
     // Navigate to the next or previous image within the current section
