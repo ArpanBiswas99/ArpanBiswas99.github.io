@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allImages.forEach(img => {
             img.parentElement.classList.remove('active'); // Remove 'active' from the wrapper
         });
-
+    
         const targetSection = sections[index];
         const images = targetSection.querySelectorAll('.image-wrapper img');
         if (images.length === 1) {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // If there are multiple images, activate the first one by default
             images[0].parentElement.classList.add('active');
         }
-
+    
         currentSectionIndex = index; // Update the current section index
         // Scroll the active image or section into view
         const activeWrapper = targetSection.querySelector('.image-wrapper.active');
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             targetSection.scrollIntoView({ behavior: 'smooth' });
         }
-    } 
+    }    
     
 
     // Navigate to the next or previous image within the current section
@@ -130,6 +130,46 @@ document.addEventListener('DOMContentLoaded', () => {
             activateSection(index);
         });
     });
+
+    // Function to update navbar based on the current section
+    function updateNavbarActiveSection() {
+        let currentSectionIndex = -1; // Default to an invalid value
+        sections.forEach((section, index) => {
+            const sectionTop = section.offsetTop - 50; // Add some offset to ensure the change happens a bit before the section reaches the top
+            const sectionBottom = sectionTop + section.offsetHeight;
+            if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
+                currentSectionIndex = index;
+            }
+        });
+
+        // Update navbar items based on the current section
+        navbarItems.forEach((item, index) => {
+            if (index === currentSectionIndex) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+    // Debounce function to limit how often we check the scroll position
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Listen for scroll events and update the navbar
+    window.addEventListener('scroll', debounce(updateNavbarActiveSection, 10));
+
+    // Initial update in case the page is reloaded with a scroll position other than 0
+    updateNavbarActiveSection();
 
     activateSection(0); // Activate the first section by default
 });
