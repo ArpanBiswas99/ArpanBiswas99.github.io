@@ -4,9 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
     let currentSectionIndex = 0;
+    let isScrolling = false;
 
     // Function to update the active image in the current section
     function updateActiveImage(direction) {
+        if (isScrolling) return;
+
+        isScrolling = true;
         const images = sections[currentSectionIndex].querySelectorAll('.image-wrapper');
         const activeIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
         let newIndex = activeIndex + direction;
@@ -22,6 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 changeSection(currentSectionIndex - 1);
             }
         }
+
+        setTimeout(() => {
+            isScrolling = false;
+        }, 800); // Delay scrolling for smoother transition
     }
 
     // Function to change the current section and highlight the navbar
@@ -32,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
         newSectionImages.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
     }
 
-    // Mousewheel event to handle navigation between sections and section snapping
-    document.addEventListener('mousewheel', (e) => {
+    // Mousewheel event to handle navigation between sections
+    document.addEventListener('wheel', (e) => {
         if (e.deltaY > 0) {
             updateActiveImage(1);
         } else if (e.deltaY < 0) {
@@ -54,10 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     nextButton.addEventListener('click', () => updateActiveImage(1));
     backButton.addEventListener('click', () => updateActiveImage(-1));
 
-    // Initialize the first section as active
-    changeSection(0);
-
-    // Detect the end of the current section and automatically change sections
+    // Detect the end of the current section and snap to the next section
     sections.forEach((section, index) => {
         section.addEventListener('scroll', () => {
             const scrollWidth = section.scrollWidth;
@@ -72,4 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Initialize the first section as active
+    changeSection(0);
 });
