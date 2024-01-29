@@ -7,10 +7,13 @@
 
 /* Global styles */
 body, html {
+    margin: 0;
+    padding: 0;
     background-color: #121212;
     color: #fff;
     font-family: Arial, sans-serif;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Still prevent horizontal scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
 /* Navigation bar styles */
@@ -18,13 +21,13 @@ body, html {
     background-color: #333;
     color: #fff;
     width: 100%;
-    position: fixed;
+    position: fixed; /* Fixed at the top */
     top: 0;
     left: 0;
-    z-index: 2000;
+    z-index: 2000; /* Higher than other items to stay on top */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
+    display: flex; /* Center the navigation bar horizontally */
+    justify-content: center; /* Center the items horizontally */
 }
 
 .navbar ul {
@@ -32,8 +35,8 @@ body, html {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
+    display: flex; /* Align items in a row */
+    justify-content: center; /* Center items horizontally */
 }
 
 .navbar li {
@@ -55,7 +58,7 @@ body, html {
 
 /* Main content styles */
 main {
-    padding-top: 50px;
+    padding-top: 50px; /* Height of navbar */
 }
 
 /* Scrollbar styling */
@@ -76,32 +79,27 @@ body::-webkit-scrollbar-thumb {
 
 /* Image section styles */
 .image-section {
-    display: none;
-    flex-direction: column;
+    min-height: 100vh;
+    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    min-height: 100vh;
-    position: relative;
 }
 
-.image-section.active {
-    display: flex;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.image-section img {
+img {
     max-width: 100%;
-    max-height: 80vh;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
+    max-height: 100vh;
+    display: block; /* Show all images */
+    margin: auto; /* Center image */
+    opacity: 0; /* Start with images invisible */
+    transition: opacity 1s ease-in-out; /* Transition for fading in */
 }
 
-.image-section img.active {
-    display: block;
+img.visible {
+    opacity: 1; /* Make image visible when in viewport */
 }
 
+/* Next and Back buttons */
 .next-section, .back-section {
     position: fixed;
     bottom: 20px;
@@ -110,23 +108,27 @@ body::-webkit-scrollbar-thumb {
     border: none;
     padding: 10px 20px;
     cursor: pointer;
-    z-index: 1000;
+    z-index: 1000; /* Make sure button is above all sections */
     opacity: 0.5;
     transition: opacity 0.3s ease-in-out;
 }
 
+/* Place the "Back" button on the left */
 .back-section {
     left: 20px;
 }
 
+/* Place the "Next" button on the right */
 .next-section {
     right: 20px;
 }
 
+/* Show Next and Back buttons on hover */
 .next-section:hover, .back-section:hover {
-    opacity: 1;
+    opacity: 1; /* Fully opaque on hover */
 }
 
+/* Keyframes for fadeIn animation */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
