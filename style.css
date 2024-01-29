@@ -39,7 +39,7 @@ body, html {
 }
 
 .navbar li {
-    float: center;
+    /* Remove the float property, it's not needed */
 }
 
 .navbar li a {
@@ -58,7 +58,6 @@ body, html {
 .navbar li a.active {
     background-color: #555;
 }
-
 
 /* Main content styles for horizontal scrolling */
 main {
@@ -86,7 +85,6 @@ main {
     overflow: hidden;
     padding-left: 50px; /* Add padding to the left of each section for horizontal layout */
 }
-
 
 /* Style for the active image */
 .image-wrapper.active {
@@ -131,7 +129,6 @@ main {
 .next-section:hover, .back-section:hover {
     opacity: 1; /* Fully opaque on hover */
 }
-
 
 /* Hide scrollbar for all browsers */
 body::-webkit-scrollbar, main::-webkit-scrollbar {
