@@ -94,8 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     changeSection(0); // Initialize the first section as active
 
-    window.addEventListener('scroll', updateNavbarOnScroll);
-
     // Optional: If you want to navigate images within a section using keyboard arrows
     document.addEventListener('keydown', (e) => {
         switch (e.key) {
