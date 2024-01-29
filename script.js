@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const navbarList = document.querySelector('.navbar ul');
     const navbarItems = navbarList.querySelectorAll('li');
+    const nextButton = document.querySelector('.next-section');
+    const backButton = document.querySelector('.back-section');
 
     function changeSection(newIndex) {
         sections[currentSectionIndex].classList.remove('active');
@@ -20,6 +22,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.classList.add('active');
             }
         });
+
+        // Show/hide Next and Back buttons based on section index
+        if (currentSectionIndex === 0) {
+            backButton.style.display = 'none';
+        } else {
+            backButton.style.display = 'block';
+        }
+
+        if (currentSectionIndex === sections.length - 1) {
+            nextButton.style.display = 'none';
+        } else {
+            nextButton.style.display = 'block';
+        }
     }
 
     function showImage(newIndex) {
@@ -32,38 +47,43 @@ document.addEventListener('DOMContentLoaded', () => {
         const images = sections[currentSectionIndex].querySelectorAll('img');
         if (currentImageIndex < images.length - 1) {
             showImage(++currentImageIndex);
-        } else if (currentSectionIndex < sections.length - 1) {
-            changeSection(currentSectionIndex + 1);
         }
     }
 
     function previousImage() {
         if (currentImageIndex > 0) {
             showImage(--currentImageIndex);
-        } else if (currentSectionIndex > 0) {
+        }
+    }
+
+    function nextSection() {
+        if (currentSectionIndex < sections.length - 1) {
+            changeSection(currentSectionIndex + 1);
+        }
+    }
+
+    function previousSection() {
+        if (currentSectionIndex > 0) {
             changeSection(currentSectionIndex - 1);
         }
     }
 
     // Scroll event listener to handle scrolling within a section
-    window.addEventListener('wheel', (e) => {
-        if (e.deltaY > 0) {
-            nextImage();
-        } else {
-            previousImage();
-        }
-        e.preventDefault();
-    }, { passive: false });
+    sections.forEach((section, index) => {
+        section.addEventListener('scroll', () => {
+            // Calculate the scroll progress as a percentage
+            const scrollProgress = (section.scrollTop / (section.scrollHeight - section.clientHeight)) * 100;
 
-    document.addEventListener('keydown', (e) => {
-        if (['ArrowDown', 'ArrowRight'].includes(e.key)) {
-            nextImage();
-        } else if (['ArrowUp', 'ArrowLeft'].includes(e.key)) {
-            previousImage();
-        }
+            // Check if the scroll progress is at the bottom of the section
+            if (scrollProgress >= 95) {
+                nextImage();
+            }
+        });
     });
 
-    document.querySelector('.next-section').addEventListener('click', nextImage);
+    // Event listeners for Next and Back buttons
+    nextButton.addEventListener('click', nextSection);
+    backButton.addEventListener('click', previousSection);
 
     // Initialize the first section and image
     changeSection(0);

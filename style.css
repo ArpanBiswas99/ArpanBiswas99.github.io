@@ -72,8 +72,8 @@ main {
     padding-top: 50px;
 }
 
+/* Image section styles */
 .image-section {
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -83,35 +83,31 @@ main {
     transition: opacity 1s ease-in-out, transform 1s ease-in-out;
 }
 
-.image-section.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-img {
+/* Images within the section */
+.image-section img {
     max-width: 100%;
-    max-height: 100vh;
-    display: block;
-    margin: auto;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
+    height: auto; /* Maintain aspect ratio */
 }
 
-img.visible {
-    opacity: 1;
-}
-
-/* Next button styles */
-.next-section {
+/* Next and Back buttons */
+.next-section, .back-section {
+    display: none;
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
     background-color: #333;
     color: #fff;
     border: none;
-    padding: 10px 20px;
     cursor: pointer;
     z-index: 1000;
+    opacity: 0.5; /* Initial opacity */
+    transition: opacity 0.3s ease-in-out; /* Transition for opacity */
+}
+
+/* Show Next and Back buttons on hover */
+.next-section:hover, .back-section:hover {
+    opacity: 1;
 }
 
 /* Keyframes for fadeIn animation */
