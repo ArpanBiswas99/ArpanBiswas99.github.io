@@ -127,3 +127,24 @@ main {
 .next-section:hover, .back-section:hover {
     opacity: 1; /* Fully opaque on hover */
 }
+
+.text-slide {
+    color: #fff; /* Assuming white text */
+    background-color: #000; /* Assuming black background */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
+    text-align: center;
+}
+
+.text-slide h1 {
+    font-size: 4em; /* Large text for the name */
+    margin-bottom: 0.5em;
+}
+
+.text-slide p {
+    font-size: 2em; /* Slightly smaller text for 'Digital Resume' */
+    letter-spacing: 2px;
+}
