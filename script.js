@@ -1,93 +1,56 @@
 document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.image-section');
-    let currentImageIndex = 0; // Track the current image index globally
-    const allImages = document.querySelectorAll('.image-wrapper img'); // Select all images
+    const allImages = document.querySelectorAll('.image-wrapper img');
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
     const navbarItems = document.querySelectorAll('.navbar li');
 
-    // Function to activate a specific image
-    function activateImage(index) {
-        allImages.forEach((img, idx) => {
-            const wrapper = img.parentElement;
-            wrapper.classList.remove('active');
-            if (idx === index) {
-                wrapper.classList.add('active');
-                img.scrollIntoView({ behavior: 'smooth', inline: 'center' }); // Center the active image
-                updateSectionIndex(idx); // Update the section index based on the active image
-            }
-        });
-        currentImageIndex = index; // Update the global image index
-        updateButtonVisibility(); // Update next/back button visibility
+    // Function to scroll the active image into the center of the viewport
+    function centerActiveImage(img) {
+        const imgRect = img.getBoundingClientRect();
+        const scrollX = imgRect.left + window.scrollX - (window.innerWidth / 2) + (imgRect.width / 2);
+        window.scrollTo({ left: scrollX, behavior: 'smooth' });
     }
 
-    // Function to update the current section index based on the active image
-    function updateSectionIndex(imageIndex) {
-        const activeImg = allImages[imageIndex];
-        const activeSection = activeImg.closest('.image-section');
-        const sectionIndex = Array.from(sections).indexOf(activeSection);
-        currentSectionIndex = sectionIndex;
-        updateNavbar(sectionIndex); // Update navbar highlighting
+    // Function to activate an image
+    function activateImage(imageWrapper) {
+        allImages.forEach(img => img.parentElement.classList.remove('active'));
+        imageWrapper.classList.add('active');
+        centerActiveImage(imageWrapper);
     }
 
-    // Function to update navbar highlighting based on the current section
-    function updateNavbar(sectionIndex) {
-        navbarItems.forEach((item, idx) => {
-            item.classList.remove('active');
-            if (idx === sectionIndex) {
-                item.classList.add('active');
-            }
-        });
-    }
-
-    // Function to update the visibility of the next and back buttons
-    function updateButtonVisibility() {
-        backButton.style.display = currentImageIndex === 0 ? 'none' : 'block';
-        nextButton.style.display = currentImageIndex === allImages.length - 1 ? 'none' : 'block';
-    }
-
-    // Function to navigate to the next or previous image
-    function navigateImage(direction) {
-        let newIndex = currentImageIndex + direction;
-        if (newIndex >= 0 && newIndex < allImages.length) {
-            activateImage(newIndex);
+    // Function to find the next image to activate
+    function findNextImage(direction) {
+        let activeImgIndex = Array.from(allImages).findIndex(img => img.parentElement.classList.contains('active'));
+        let newActiveIndex = activeImgIndex + direction;
+        if (newActiveIndex >= 0 && newActiveIndex < allImages.length) {
+            return allImages[newActiveIndex].parentElement;
         }
+        return null;
     }
 
-    // Add click event listeners to the next and back buttons
-    nextButton.addEventListener('click', () => navigateImage(1));
-    backButton.addEventListener('click', () => navigateImage(-1));
+    // Event listeners for next and previous buttons
+    nextButton.addEventListener('click', () => {
+        let nextImageWrapper = findNextImage(1);
+        if (nextImageWrapper) activateImage(nextImageWrapper);
+    });
 
-    // Add keyboard navigation for left and right arrow keys
+    backButton.addEventListener('click', () => {
+        let prevImageWrapper = findNextImage(-1);
+        if (prevImageWrapper) activateImage(prevImageWrapper);
+    });
+
+    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowRight') {
-            navigateImage(1);
+            let nextImageWrapper = findNextImage(1);
+            if (nextImageWrapper) activateImage(nextImageWrapper);
         } else if (e.key === 'ArrowLeft') {
-            navigateImage(-1);
+            let prevImageWrapper = findNextImage(-1);
+            if (prevImageWrapper) activateImage(prevImageWrapper);
         }
     });
 
-    // Add mouse wheel navigation
-    document.addEventListener('wheel', (e) => {
-        e.preventDefault(); // Prevent the default scroll behavior
-        if (e.deltaY > 0) { // Scrolling down
-            navigateImage(1);
-        } else { // Scrolling up
-            navigateImage(-1);
-        }
-    });
-
-    // Add click event listeners to navbar items for navigating to sections
-    navbarItems.forEach((item, index) => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent the default anchor behavior
-            const targetSection = sections[index];
-            const firstImage = targetSection.querySelector('.image-wrapper img');
-            const firstImageIndex = Array.from(allImages).indexOf(firstImage);
-            activateImage(firstImageIndex);
-        });
-    });
-
-    // Activate the first image on page load
-    activateImage(0);
+    // Initialize the first image as active
+    if (allImages.length > 0) activateImage(allImages[0].parentElement);
 });
