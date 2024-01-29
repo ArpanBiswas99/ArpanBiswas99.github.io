@@ -58,17 +58,16 @@ body, html {
 /* Main content styles */
 main {
     display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping of sections */
+    flex-wrap: nowrap;
     overflow-x: scroll; /* Enable horizontal scrolling */
-    scroll-snap-type: x proximity; /* Snapping effect */
-    scroll-behavior: smooth; /* Smooth scrolling */
-    justify-content: center; /* Center the active image horizontally */
-    align-items: center; /* Center the active image vertically */
-    height: 100vh; /* Make the active image fill the viewport vertically */
-    white-space: nowrap; /* Prevent text wrapping */
-    user-select: none; /* Disable text selection */
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
-    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+    overflow-y: hidden; /* Disable vertical scrolling */
+    scroll-snap-type: x proximity;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    user-select: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%; /* Make the content full-width */
 }
 
 /* Image section styles */
@@ -148,3 +147,43 @@ main {
     font-size: 2em; /* Slightly smaller text for 'Digital Resume' */
     letter-spacing: 2px;
 }
+
+.text-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    color: #fff; /* White text */
+    background-color: #121212; /* Dark background */
+    font-family: Arial, sans-serif;
+}
+
+.content-wrapper {
+    max-width: 800px; /* Adjust as needed */
+}
+
+.content-wrapper h2 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+    color: #76e2b3; /* Adjust the color to match the slide */
+    border-left: 5px solid #76e2b3; /* Left border styling */
+    padding-left: 20px;
+}
+
+.profile-image {
+    width: 150px; /* Adjust as needed */
+    height: 150px; /* Adjust as needed */
+    background-color: #ccc; /* Placeholder for the actual image */
+    border-radius: 50%;
+    margin: 20px auto; /* Center the image */
+    background-image: url('profile-pic_circle.png'); /* Your image path here */
+    background-size: cover;
+    background-position: center;
+}
+
+.content-wrapper p {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 1em;
+}
+

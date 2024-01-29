@@ -5,30 +5,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbarItems = document.querySelectorAll('.navbar li a'); // Select navbar items
 
     function activateSection(index) {
-        // Deactivate all images first
         allImages.forEach(img => {
-            img.parentElement.classList.remove('active'); // Remove 'active' from the wrapper
+            img.parentElement.classList.remove('active');
         });
-    
+
         const targetSection = sections[index];
         const images = targetSection.querySelectorAll('.image-wrapper img');
-        if (images.length === 1) {
-            // If there's only one image in the section, make it active
-            images[0].parentElement.classList.add('active');
-        } else if (images.length > 1) {
-            // If there are multiple images, activate the first one by default
+        
+        images.forEach(img => {
+            img.parentElement.classList.remove('active');
+        });
+
+        if (images.length > 0) {
             images[0].parentElement.classList.add('active');
         }
-    
-        currentSectionIndex = index; // Update the current section index
-        // Scroll the active image or section into view
+
+        currentSectionIndex = index;
         const activeWrapper = targetSection.querySelector('.image-wrapper.active');
         if (activeWrapper) {
             activeWrapper.scrollIntoView({ behavior: 'smooth', inline: 'center' });
         } else {
             targetSection.scrollIntoView({ behavior: 'smooth' });
         }
-    }    
+
+        // Update the active navigation item
+        navbarItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        navbarItems[index].classList.add('active');
+    }
     
 
     // Navigate to the next or previous image within the current section
@@ -55,16 +60,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const wrappers = currentSection.querySelectorAll('.image-wrapper');
         const activeWrapper = currentSection.querySelector('.image-wrapper.active');
         let newActiveIndex = Array.from(wrappers).indexOf(activeWrapper) + offset;
-
+    
         if (newActiveIndex >= 0 && newActiveIndex < wrappers.length) {
             wrappers.forEach(wrapper => wrapper.classList.remove('active'));
             wrappers[newActiveIndex].classList.add('active');
+    
+            // Scroll horizontally to the new active image
+            const mainElement = document.querySelector('main');
+            const activeImage = wrappers[newActiveIndex].querySelector('img');
+            mainElement.scroll({
+                left: activeImage.offsetLeft,
+                behavior: 'smooth',
+            });
         } else if (newActiveIndex < 0 && currentSectionIndex > 0) {
             activateSection(currentSectionIndex - 1);
         } else if (newActiveIndex >= wrappers.length && currentSectionIndex < sections.length - 1) {
             activateSection(currentSectionIndex + 1);
         }
     }
+    
 
     const backButton = document.querySelector('.back-section');
     const nextButton = document.querySelector('.next-section');
@@ -171,5 +185,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial update in case the page is reloaded with a scroll position other than 0
     updateNavbarActiveSection();
 
-    activateSection(0); // Activate the first section by default
+    activateSection(0);
 });
