@@ -79,9 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('wheel', (e) => {
         e.preventDefault();
-        if (e.deltaY > 0) {
+        if (e.deltaY > 50) { // Adjust the sensitivity here (e.g., increase to reduce sensitivity)
             showImage(1);
-        } else {
+        } else if (e.deltaY < -50) {
             showImage(-1);
         }
     });
@@ -91,6 +91,27 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             activateSection(index);
         });
+    });
+
+    // Link scrolling with navbar
+    let isScrolling = false;
+    document.addEventListener('scroll', () => {
+        if (!isScrolling) {
+            isScrolling = true;
+            setTimeout(() => {
+                const scrollY = window.scrollY;
+                let foundIndex = -1;
+                sections.forEach((section, index) => {
+                    if (section.offsetTop <= scrollY + window.innerHeight / 2) {
+                        foundIndex = index;
+                    }
+                });
+                if (foundIndex !== -1) {
+                    activateSection(foundIndex);
+                }
+                isScrolling = false;
+            }, 100);
+        }
     });
 
     activateSection(0);
