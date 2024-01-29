@@ -3,11 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSectionIndex = 0;
     const allImages = document.querySelectorAll('.image-wrapper img');
     const navbarItems = document.querySelectorAll('.navbar li a');
+    let currentImageIndex = 0;
+
+    const order = [0, 1, 2, 3]; // Order of images within the first section
 
     function activateSection(index) {
         allImages.forEach(img => {
             img.parentElement.classList.remove('active');
-            img.style.opacity = 0; // Hide all images
+            img.style.opacity = 0;
         });
 
         const targetSection = sections[index];
@@ -18,17 +21,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (images.length > 0) {
-            images[0].parentElement.classList.add('active');
-            fadeIn(images[0]); // Fade in the first image
+            currentImageIndex = 0;
+            activateImage(images[currentImageIndex]);
         }
 
         currentSectionIndex = index;
 
-        // Update the active navigation item
         navbarItems.forEach(item => {
             item.classList.remove('active');
         });
         navbarItems[index].classList.add('active');
+    }
+
+    function activateImage(image) {
+        image.parentElement.classList.add('active');
+        fadeIn(image);
     }
 
     function fadeIn(element) {
@@ -44,62 +51,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     }
 
-    function showImage(offset) {
+    function showNextImage() {
         const currentSection = sections[currentSectionIndex];
-        const wrappers = currentSection.querySelectorAll('.image-wrapper');
-        const activeWrapper = currentSection.querySelector('.image-wrapper.active');
-        let newActiveIndex = Array.from(wrappers).indexOf(activeWrapper) + offset;
-    
-        if (newActiveIndex >= 0 && newActiveIndex < wrappers.length) {
-            wrappers.forEach(wrapper => wrapper.classList.remove('active'));
-            wrappers[newActiveIndex].classList.add('active');
-    
-            // Fade in the new active image
-            const newActiveImage = wrappers[newActiveIndex].querySelector('img');
-            fadeIn(newActiveImage);
+        const images = currentSection.querySelectorAll('.image-wrapper img');
 
-            // Scroll horizontally to the new active image
-            const mainElement = document.querySelector('main');
-            mainElement.scroll({
-                left: newActiveImage.offsetLeft,
-                behavior: 'smooth',
-            });
-        } else if (newActiveIndex < 0 && currentSectionIndex > 0) {
-            activateSection(currentSectionIndex - 1);
-        } else if (newActiveIndex >= wrappers.length && currentSectionIndex < sections.length - 1) {
-            activateSection(currentSectionIndex + 1);
+        if (currentImageIndex < images.length - 1) {
+            currentImageIndex++;
+            activateImage(images[currentImageIndex]);
+        } else {
+            if (currentSectionIndex < sections.length - 1) {
+                activateSection(currentSectionIndex + 1);
+            }
+        }
+    }
+
+    function showPreviousImage() {
+        const currentSection = sections[currentSectionIndex];
+        const images = currentSection.querySelectorAll('.image-wrapper img');
+        if (currentImageIndex > 0) {
+            currentImageIndex--;
+            activateImage(images[currentImageIndex]);
+        } else {
+            if (currentSectionIndex > 0) {
+                activateSection(currentSectionIndex - 1);
+            }
         }
     }
 
     const backButton = document.querySelector('.back-section');
     const nextButton = document.querySelector('.next-section');
 
-    nextButton.addEventListener('click', () => showImage(1));
-    backButton.addEventListener('click', () => showImage(-1));
+    nextButton.addEventListener('click', showNextImage);
+    backButton.addEventListener('click', showPreviousImage);
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowRight') {
-            showImage(1);
+            showNextImage();
         } else if (e.key === 'ArrowLeft') {
-            showImage(-1);
+            showPreviousImage();
         }
     });
 
-    // Adjusted the scroll sensitivity
     let scrollTimeout;
     document.addEventListener('wheel', (e) => {
         e.preventDefault();
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
             if (e.deltaY > 10) {
-                showImage(1);
+                showNextImage();
             } else if (e.deltaY < -10) {
-                showImage(-1);
+                showPreviousImage();
             }
         }, 200);
     });
 
-    // Linked navbar with scrolling and highlighted the sections
     navbarItems.forEach((item, index) => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -107,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Detect section changes during scrolling and activate the corresponding section
     let isScrolling;
     document.addEventListener('scroll', () => {
         clearTimeout(isScrolling);
@@ -117,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             for (let i = 0; i < sections.length; i++) {
                 const section = sections[i];
-                const sectionTop = section.offsetTop;
+                const sectionTop = section.offsetTop - 50;
                 const sectionBottom = sectionTop + section.clientHeight;
 
                 if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
@@ -128,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200);
     });
 
-    // Link navbar items to sections
     navbarItems.forEach((item, index) => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -136,18 +139,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Function to update navbar based on the current section
     function updateNavbarActiveSection() {
-        let currentSectionIndex = -1; // Default to an invalid value
+        let currentSectionIndex = -1;
         sections.forEach((section, index) => {
-            const sectionTop = section.offsetTop - 50; // Add some offset to ensure the change happens a bit before the section reaches the top
+            const sectionTop = section.offsetTop - 50;
             const sectionBottom = sectionTop + section.offsetHeight;
             if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
                 currentSectionIndex = index;
             }
         });
 
-        // Update navbar items based on the current section
         navbarItems.forEach((item, index) => {
             if (index === currentSectionIndex) {
                 item.classList.add('active');
@@ -157,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Debounce function to limit how often we check the scroll position
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -170,10 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // Listen for scroll events and update the navbar
     window.addEventListener('scroll', debounce(updateNavbarActiveSection, 10));
 
-    // Initial update in case the page is reloaded with a scroll position other than 0
     updateNavbarActiveSection();
 
     activateSection(0);
