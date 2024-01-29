@@ -79,13 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('wheel', (e) => {
         e.preventDefault();
-        if (e.deltaY > 50) { // Adjust the sensitivity here (e.g., increase to reduce sensitivity)
+        if (e.deltaY > 50) { // Adjust scroll sensitivity here
             showImage(1);
-        } else if (e.deltaY < -50) {
+        } else if (e.deltaY < -50) { // Adjust scroll sensitivity here
             showImage(-1);
         }
     });
 
+    // Linking navbar items with sections
     navbarItems.forEach((item, index) => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -93,25 +94,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Link scrolling with navbar
-    let isScrolling = false;
-    document.addEventListener('scroll', () => {
-        if (!isScrolling) {
-            isScrolling = true;
-            setTimeout(() => {
-                const scrollY = window.scrollY;
-                let foundIndex = -1;
-                sections.forEach((section, index) => {
-                    if (section.offsetTop <= scrollY + window.innerHeight / 2) {
-                        foundIndex = index;
-                    }
-                });
-                if (foundIndex !== -1) {
-                    activateSection(foundIndex);
-                }
-                isScrolling = false;
-            }, 100);
-        }
+    // Detecting when a section enters the viewport and updating the navbar
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                const index = sections.indexOf(entry.target);
+                activateSection(index);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    sections.forEach((section) => {
+        observer.observe(section);
     });
 
     activateSection(0);
