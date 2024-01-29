@@ -1,67 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.image-section');
     let currentSectionIndex = 0;
-    const allImages = document.querySelectorAll('.image-wrapper img'); // Select all images
+    const navbarItems = document.querySelectorAll('.navbar li');
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
-    const navbarItems = document.querySelectorAll('.navbar li');
 
-    // Function to activate a section and its first image
     function activateSection(index) {
-        // Deactivate all images first
-        allImages.forEach(img => {
-            img.parentElement.classList.remove('active'); // Remove 'active' from the wrapper
+        sections.forEach(section => {
+            section.classList.remove('active');
         });
 
         const targetSection = sections[index];
-        const images = targetSection.querySelectorAll('.image-wrapper img');
-        if (images.length === 1) {
-            // If there's only one image in the section, make it active
-            images[0].parentElement.classList.add('active');
-        } else if (images.length > 1) {
-            // If there are multiple images, activate the first one by default or maintain the current active image
-            const activeImage = targetSection.querySelector('.image-wrapper.active img') || images[0];
-            activeImage.parentElement.classList.add('active');
-        }
-
-        currentSectionIndex = index; // Update the current section index
-        // Scroll the active image or section into view
-        const activeWrapper = targetSection.querySelector('.image-wrapper.active');
-        if (activeWrapper) {
-            activeWrapper.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-        } else {
-            targetSection.scrollIntoView({ behavior: 'smooth' });
-        }
-
+        targetSection.classList.add('active');
+        currentSectionIndex = index;
         updateButtonVisibility();
+        highlightNavbarItem(index);
     }
 
-    // Function to update the visibility of next and back buttons
     function updateButtonVisibility() {
         backButton.style.display = currentSectionIndex === 0 ? 'none' : 'block';
         nextButton.style.display = currentSectionIndex === sections.length - 1 ? 'none' : 'block';
     }
 
-    // Function to show the next or previous image within the current section
     function showImage(offset) {
-        const currentSection = sections[currentSectionIndex];
-        const wrappers = currentSection.querySelectorAll('.image-wrapper');
-        const activeWrapper = currentSection.querySelector('.image-wrapper.active');
-        let newActiveIndex = Array.from(wrappers).indexOf(activeWrapper) + offset;
-
-        if (newActiveIndex >= 0 && newActiveIndex < wrappers.length) {
-            wrappers.forEach(wrapper => wrapper.classList.remove('active'));
-            wrappers[newActiveIndex].classList.add('active');
-        } else if (newActiveIndex < 0 && currentSectionIndex > 0) {
-            activateSection(currentSectionIndex - 1);
-        } else if (newActiveIndex >= wrappers.length && currentSectionIndex < sections.length - 1) {
-            activateSection(currentSectionIndex + 1);
+        const newIndex = currentSectionIndex + offset;
+        if (newIndex >= 0 && newIndex < sections.length) {
+            activateSection(newIndex);
         }
-
-        updateButtonVisibility();
     }
 
-    // Event listeners for navigation
+    function highlightNavbarItem(index) {
+        navbarItems.forEach((item, idx) => {
+            item.classList.remove('active');
+            if (idx === index) {
+                item.classList.add('active');
+            }
+        });
+    }
+
     nextButton.addEventListener('click', () => showImage(1));
     backButton.addEventListener('click', () => showImage(-1));
 
@@ -89,6 +65,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Initialize the first section and image
     activateSection(0);
 });

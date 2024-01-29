@@ -62,43 +62,41 @@ main {
     overflow-x: scroll; /* Enable horizontal scrolling */
     scroll-snap-type: x proximity; /* Snapping effect */
     scroll-behavior: smooth; /* Smooth scrolling */
+    justify-content: center; /* Center the active image horizontally */
+    align-items: center; /* Center the active image vertically */
+    height: 100vh; /* Make the active image fill the viewport vertically */
 }
 
 /* Image section styles */
 .image-section {
-    display: flex; /* Display images in a row */
-    flex: 0 0 auto; /* Do not grow, do not shrink, basis is auto */
-    width: 100vw; /* Section width is full viewport width */
-    align-items: center; /* Align images vertically in the center */
-    justify-content: center; /* Center images horizontally */
+    display: none; /* Hide all images initially */
     position: relative; /* To position buttons and images */
     transition: transform 1s ease-in-out; /* Smooth transition for scaling */
 }
 
+/* Style for the active image */
+.image-section.active {
+    display: block; /* Show the active image */
+}
+
 .image-wrapper {
-    margin: 0 5vw; /* Space between images for multi-image sections */
     opacity: 0.5; /* Non-active images are more translucent */
     transition: opacity 1s ease-in-out; /* Smooth transition for opacity */
+    position: relative; /* To position the active image */
+    text-align: center; /* Center the active image horizontally */
 }
 
 /* Style for all images */
 .image-wrapper img {
-    width: auto; /* Maintain aspect ratio */
-    height: 70vh; /* Adjust height to fit within the viewport */
-    object-fit: contain; /* Ensure the image fits within the container without being cropped */
+    max-width: 100%; /* Ensure the image fits within the container */
+    max-height: 100vh; /* Make the active image fill the viewport vertically */
+    display: block; /* Remove any extra spacing below the image */
+    margin: 0 auto; /* Center the image horizontally */
 }
 
 /* Styles for the active image */
 .image-wrapper.active img {
-    height: 80vh; /* Make the active image larger, consistent in all sections */
     opacity: 1; /* Active image is fully opaque */
-}
-
-/* Style for images */
-img {
-    width: 100%; /* Image width is full container width */
-    height: auto; /* Height is auto to maintain aspect ratio */
-    object-fit: contain; /* Ensure the image fits within the container */
 }
 
 /* Next and Back buttons */
