@@ -12,7 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
         sections[currentSectionIndex].querySelectorAll('img').forEach(img => img.classList.remove('visible'));
         currentImageIndex = 0;
         currentSectionIndex = newIndex;
-        sections[currentSectionIndex].querySelectorAll('img')[currentImageIndex].classList.add('visible');
+        const images = sections[currentSectionIndex].querySelectorAll('img');
+        if (images.length > 0) {
+            images[currentImageIndex].classList.add('visible');
+        }
 
         navbarItems.forEach((item, index) => {
             item.classList.remove('active');
@@ -66,18 +69,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateNavbarOnScroll() {
-        const viewportHeight = window.innerHeight;
         const scrollY = window.scrollY;
-
+        let sectionTop = 0;
         for (let i = 0; i < sections.length; i++) {
             const section = sections[i];
-            const sectionTop = section.offsetTop;
-            const sectionBottom = sectionTop + section.clientHeight;
-
-            if (scrollY >= sectionTop && scrollY <= sectionBottom) {
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
                 changeSection(i);
                 break;
             }
+            sectionTop += sectionHeight;
         }
     }
 
@@ -93,6 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     changeSection(0); // Initialize the first section as active
+
+    window.addEventListener('scroll', updateNavbarOnScroll);
 
     // Optional: If you want to navigate images within a section using keyboard arrows
     document.addEventListener('keydown', (e) => {
