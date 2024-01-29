@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Scroll to the corresponding section when a new section is activated
-        sections[newIndex].scrollIntoView({ behavior: 'smooth' });
+        sections[newIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
         const newSectionImages = sections[newIndex].querySelectorAll('.image-wrapper');
         newSectionImages.forEach((img, imgIndex) => img.classList.toggle('active', imgIndex === 0));
         updateActiveImage(0); // Update the active image in the current section

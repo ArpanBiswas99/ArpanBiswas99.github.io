@@ -16,7 +16,7 @@
             <li><a href="#projects">Projects</a></li>
             <li><a href="#extracurriculars">Extracurriculars</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li><a href="#resume-pdf">Resume PDF</a></li>
+            <li><a href="#resume-pdf">PDF Resume</a></li>
         </ul>
     </nav>
     <main>
@@ -54,10 +54,10 @@
         </section>
         <section id="resume-pdf" class="pdf-section">
             <div class="pdf-wrapper">
-                <iframe src="pdf/Lebenslauf.pdf" width="100%" height="500px"></iframe>
-            </div>
-            <div class="pdf-download-link">
-                <a href="pdf/Lebenslauf.pdf" download="Arpan_Biswas_Lebenslauf.pdf">Download Resume PDF</a>
+                <object data="pdf/Lebenslauf.pdf" type="application/pdf" width="100%" height="500">
+                    <!-- Display a message or alternative content if PDF cannot be loaded -->
+                    <p>Unable to display PDF. <a href="pdf/Lebenslauf.pdf" download>Download Resume PDF</a> instead.</p>
+                </object>
             </div>
         </section> 
     </main>
