@@ -74,7 +74,6 @@ body::-webkit-scrollbar-thumb {
     color: #fff;
 }
 
-
 /* Image section styles */
 .image-section {
     display: none; /* Hide sections */
@@ -132,7 +131,7 @@ body::-webkit-scrollbar-thumb {
 
 /* Show Next and Back buttons on hover */
 .next-section:hover, .back-section:hover {
-    opacity: 1;
+    opacity: 1; /* Fully opaque on hover */
 }
 
 /* Keyframes for fadeIn animation */

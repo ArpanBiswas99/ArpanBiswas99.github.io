@@ -8,29 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.querySelector('.next-section');
     const backButton = document.querySelector('.back-section');
 
-    // Intersection Observer configuration
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1, // Adjust this threshold as needed
-    };
-
-    const sectionObservers = sections.map((section, index) => {
-        return new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    // Section is in the viewport
-                    changeSection(index);
-                }
-            });
-        }, observerOptions);
-    });
-
-    // Observe all sections
-    sections.forEach((section, index) => {
-        sectionObservers[index].observe(section);
-    });
-
     function changeSection(newIndex) {
         sections[currentSectionIndex].classList.remove('active');
         currentImageIndex = 0;
@@ -62,22 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showImage(newIndex) {
         const images = Array.from(sections[currentSectionIndex].querySelectorAll('img'));
-        images.forEach((img, index) => {
-            if (index === newIndex) {
-                img.style.display = 'block';
-            } else {
-                img.style.display = 'none';
-            }
-        });
-        updateScrollbarText(images[newIndex].alt);
-    }
-
-    function updateScrollbarText(text) {
-        const section = sections[currentSectionIndex];
-        const scrollbarThumb = section.parentElement.querySelector('.scrollbar-thumb');
-        if (scrollbarThumb) {
-            scrollbarThumb.textContent = text;
-        }
+        images.forEach(img => img.style.display = 'none');
+        images[newIndex].style.display = 'block';
     }
 
     function nextImage() {
@@ -104,19 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
             changeSection(currentSectionIndex - 1);
         }
     }
-
-    // Scroll event listener to handle scrolling within a section
-    sections.forEach((section, index) => {
-        section.addEventListener('scroll', () => {
-            // Calculate the scroll progress as a percentage
-            const scrollProgress = (section.scrollTop / (section.scrollHeight - section.clientHeight)) * 100;
-
-            // Check if the scroll progress is at the bottom of the section
-            if (scrollProgress >= 95) {
-                nextImage();
-            }
-        });
-    });
 
     // Event listeners for Next and Back buttons
     nextButton.addEventListener('click', nextSection);
