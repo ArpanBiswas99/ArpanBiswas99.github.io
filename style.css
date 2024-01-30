@@ -29,26 +29,63 @@ body, html {
     justify-content: center; /* Center the items horizontally */
 }
 
+/* Mobile-friendly styles */
+/* Hamburger menu icon */
+.menu-toggle {
+    display: none; /* Initially hidden on larger screens */
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Show the navigation menu when the menu icon is clicked */
+.navbar.active ul {
+    display: block;
+}
+
+/* Styles for mobile navigation */
 .navbar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    display: flex; /* Align items in a row */
-    justify-content: center; /* Center items horizontally */
+    display: none; /* Initially hidden on smaller screens */
+    background-color: #333;
+    position: absolute;
+    top: 50px; /* Adjust the top position as needed */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 2000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .navbar li {
     /* Remove the float property, it's not needed */
+    display: block;
 }
 
 .navbar li a {
     display: block;
     color: white;
     text-align: center;
-    padding: 14px 16px;
+    padding: 14px 0;
     text-decoration: none;
     transition: background-color 0.3s;
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 768px) {
+    /* Adjust your styles here for smaller screens */
+    .menu-toggle {
+        display: block; /* Show the hamburger menu icon on smaller screens */
+    }
+
+    .navbar ul {
+        top: 60px; /* Adjust the top position as needed */
+    }
 }
 
 .navbar li a:hover, .navbar ul li.active a {
