@@ -85,8 +85,14 @@ body, html {
 
     .navbar ul {
         top: 60px; /* Adjust the top position as needed */
+        display: none; /* Hide the navigation menu on smaller screens by default */
+    }
+
+    .navbar.active ul {
+        display: block; /* Show the navigation menu when the menu icon is clicked */
     }
 }
+
 
 .navbar li a:hover, .navbar ul li.active a {
     background-color: #555;
