@@ -38,10 +38,6 @@ body, html {
     justify-content: center; /* Center items horizontally */
 }
 
-.navbar li {
-    /* Remove the float property, it's not needed */
-}
-
 .navbar li a {
     display: block;
     color: white;
