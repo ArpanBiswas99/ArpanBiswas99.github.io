@@ -85,6 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.querySelector('.next-section').addEventListener('click', function() {
+        gtag('event', 'click', {
+            'event_category': 'Button Click',
+            'event_label': 'Next Section'
+        });
+        updateActiveImage(1);
+    });    
+
     // Initialize the first section as active
     changeSection(0);
 });
